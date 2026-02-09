@@ -43,6 +43,7 @@ jobs:
       working-directory: './backend'
       run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
     - name: Create Database
+      working-directory: './backend'
       run: |
         mkdir -p data
         touch data/database
