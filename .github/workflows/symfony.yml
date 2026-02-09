@@ -30,7 +30,9 @@ jobs:
     - uses: actions/checkout@v4
     - name: Copy .env.test.local
       working-directory: './backend'
-      run: php -r "file_exists('.env.test.local') || copy('.env.test', '.env.test.local');"
+      run: |
+        touch .env
+        php -r "file_exists('.env.test.local') || copy('.env.test', '.env.test.local');"
     - name: Cache Composer packages
       id: composer-cache
       uses: actions/cache@v3
