@@ -21,9 +21,12 @@ jobs:
     #  To automatically get bug fixes and new Php versions for shivammathur/setup-php,
     # change this to (see https://github.com/shivammathur/setup-php#bookmark-versioning):
     # uses: shivammathur/setup-php@v2
-    - uses: shivammathur/setup-php@2cb9b829437ee246e9b3cac53555a39208ca6d28
+    - name: Setup test Symfony PHP Backend
+      uses: shivammathur/setup-php@v2
       with:
         php-version: '8.5'
+        coverage: none
+        tools: php-cs-fixer, phpunit, composer, behat, symfony
     - uses: actions/checkout@v4
     - name: Copy .env.test.local
       run: php -r "file_exists('.env.test.local') || copy('.env.test', '.env.test.local');"
@@ -40,8 +43,11 @@ jobs:
     - name: Create Database
       run: |
         mkdir -p data
-        touch data/database.sqlite
+        touch data/database
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       env:
+        fail-fast: true
         DATABASE_URL: postgresql://%kernel.project_dir%/database
-      run: vendor/bin/phpunit
+      run: | 
+        vendor/bin/phpunit
+        vendor/bin/php-cs-fixer check
