@@ -29,6 +29,7 @@ jobs:
         tools: php-cs-fixer, phpunit, composer, behat, symfony
     - uses: actions/checkout@v4
     - name: Copy .env.test.local
+      working-directory: './backend'
       run: php -r "file_exists('.env.test.local') || copy('.env.test', '.env.test.local');"
     - name: Cache Composer packages
       id: composer-cache
@@ -39,6 +40,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-php-
     - name: Install Dependencies
+      working-directory: './backend'
       run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
     - name: Create Database
       run: |
