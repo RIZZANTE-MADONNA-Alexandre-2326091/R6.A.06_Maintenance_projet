@@ -48,10 +48,10 @@ jobs:
         mkdir -p data
         touch data/database
     - name: Execute tests (Unit and Feature tests) via PHPUnit
+      working-directory: './backend'
       env:
         fail-fast: true
         DATABASE_URL: postgresql://%kernel.project_dir%/database
       run: | 
-        pwd
         vendor/bin/phpunit
         vendor/bin/php-cs-fixer check
