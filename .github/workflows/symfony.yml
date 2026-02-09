@@ -52,5 +52,6 @@ jobs:
         fail-fast: true
         DATABASE_URL: postgresql://%kernel.project_dir%/database
       run: | 
+        pwd
         vendor/bin/phpunit
         vendor/bin/php-cs-fixer check
