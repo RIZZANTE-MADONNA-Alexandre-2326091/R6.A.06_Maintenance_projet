@@ -1,0 +1,148 @@
+.details-page {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.back-link:hover {
+    color: var(--primary);
+}
+
+.details-header {
+    margin-bottom: 3rem;
+}
+
+.header-badges {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.details-header h1 {
+    font-size: 3rem;
+    color: var(--text-main);
+    margin-bottom: 1rem;
+}
+
+.header-meta {
+    display: flex;
+    gap: 2rem;
+    color: var(--text-muted);
+    font-size: 1.125rem;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.details-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+}
+
+@media (max-width: 768px) {
+    .details-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+.epreuves-section h2,
+.infos-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-main);
+}
+
+.epreuves-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.epreuve-card {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.25rem;
+}
+
+.epreuve-icon {
+    background-color: #e0e7ff;
+    color: var(--primary);
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.epreuve-info {
+    flex: 1;
+}
+
+.epreuve-info h3 {
+    font-size: 1.125rem;
+    margin-bottom: 0.25rem;
+}
+
+.epreuve-type {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.btn-register {
+    background-color: var(--primary);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.btn-register:hover {
+    background-color: var(--primary-hover);
+}
+
+.info-card {
+    background-color: var(--background);
+    border: none;
+}
+
+.description {
+    line-height: 1.6;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+}
+
+.info-rules h3 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.info-rules p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
