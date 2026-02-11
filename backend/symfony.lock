@@ -58,10 +58,10 @@
             "ref": "1e012e04f573524ca83795cd19df9ea690adb604"
         },
         "files": [
-            "./behat.yml.dist",
-            "./config/services_test.yaml",
-            "./features/demo.feature",
-            "./tests/Behat/DemoContext.php"
+            "behat.yml.dist",
+            "config/services_test.yaml",
+            "features/demo.feature",
+            "tests/Behat/DemoContext.php"
         ]
     },
     "nelmio/cors-bundle": {
