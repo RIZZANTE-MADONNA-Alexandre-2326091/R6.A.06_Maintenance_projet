@@ -16,8 +16,12 @@
     },
     "require-dev": {
         "behat/behat": "^3.29",
+        "friends-of-behat/symfony-extension": "^2.6",
         "php-cs-fixer/shim": "^3.93",
         "phpunit/phpunit": "^13",
+        "symfony/browser-kit": "7.2.*",
+        "symfony/css-selector": "7.2.*",
+        "symfony/maker-bundle": "^1.66",
         "symfony/stopwatch": "7.2.*",
         "symfony/web-profiler-bundle": "7.2.*"
     },
