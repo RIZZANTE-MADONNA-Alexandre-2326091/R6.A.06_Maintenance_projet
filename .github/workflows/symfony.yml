@@ -40,6 +40,7 @@ jobs:
       with:
         php-version: '8.5'
         coverage: none
+        extensions: pdo_pgsql, mbstring, xml, ctype, iconv
         tools: php-cs-fixer, phpunit, composer, behat, symfony
     - uses: actions/checkout@v4
     - name: Copy .env.test.local
@@ -64,6 +65,11 @@ jobs:
       run: |
         mkdir -p data
         touch data/database
+    - name: Prepare Database
+      working-directory: './backend'
+      run: |
+        bin/console doctrine:database:create --env=test --if-not-exists
+        bin/console doctrine:schema:update --env=test --force
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       working-directory: './backend'
       env:
