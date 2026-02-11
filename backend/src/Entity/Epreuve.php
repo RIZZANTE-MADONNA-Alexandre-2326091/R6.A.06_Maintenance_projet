@@ -10,7 +10,9 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Repository\EpreuveRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Entité Epreuve.<br>
@@ -27,8 +29,8 @@ use Doctrine\ORM\Mapping as ORM;
         new Patch(),
         new Delete()
     ],
-    normalizationContext: ['groups' => ['qcm:read']],
-    denormalizationContext: ['groups' => ['qcm:write']]
+    normalizationContext: ['groups' => ['epreuve:read']],
+    denormalizationContext: ['groups' => ['epreuve:write']]
 )]
 class Epreuve
 {
@@ -38,13 +40,22 @@ class Epreuve
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['epreuve:read'])]
     private ?int $id = null;
 
+    /**
+     * @var string|null Nom de l'épreuve.
+     */
     #[ORM\Column(length: 255)]
+    #[Groups(['epreuve:read', 'epreuve:write'])]
     private ?string $name = null;
 
-    #[ORM\ManyToOne(cascade: ['persist', 'remove'])]
-    private ?Sport $sport_id = null;
+    #[ORM\ManyToOne(targetEntity: Competition::class, inversedBy: 'competitions')]
+    private ?Competition $competition = null;
+
+    #[ORM\ManyToOne(targetEntity: Competition::class, cascade: ['persist', 'remove'], inversedBy: 'championnat')]
+    #[Groups(['epreuve:read'])]
+    private ?Collection $sport_id = null;
 
     /**
      * Renvoie l'identifiant de l'épreuve.
@@ -55,11 +66,19 @@ class Epreuve
         return $this->id;
     }
 
+    /**
+     * Renvoie le nom de l'épreuve.
+     * @return string|null
+     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
+    /**
+     * Modifie le nom de l'épreuve.
+     * @return static
+     */
     public function setName(string $name): static
     {
         $this->name = $name;
@@ -67,15 +86,40 @@ class Epreuve
         return $this;
     }
 
-    public function getSportId(): ?Sport
+    /**
+     * Renvoie les identifiants des sports de l'épreuve
+     * @return Collection|null
+     */
+    public function getSportId(): ?Collection
     {
         return $this->sport_id;
     }
 
-    public function setSportId(?Sport $sport_id): static
+    /**
+     * Modifie les identifiants des sports de l'épreuve
+     * @return static
+     */
+    public function setSportId(?Collection $sport_id): static
     {
         $this->sport_id = $sport_id;
 
+        return $this;
+    }
+
+    /**
+     * @return Competition|null
+     */
+    public function getCompetition(): ?Competition
+    {
+        return $this->competition;
+    }
+
+    /**
+     * @param Competition|null $competition
+     */
+    public function setCompetition(?Competition $competition): static
+    {
+        $this->competition = $competition;
         return $this;
     }
 }

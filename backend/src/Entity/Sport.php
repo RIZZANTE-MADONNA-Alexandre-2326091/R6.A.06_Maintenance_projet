@@ -12,6 +12,7 @@ use ApiPlatform\Metadata\Put;
 use App\Enum\SportTypeEnum;
 use App\Repository\SportRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Entité Sport.<br>
@@ -28,8 +29,8 @@ use Doctrine\ORM\Mapping as ORM;
         new Patch(),
         new Delete()
     ],
-    normalizationContext: ['groups' => ['qcm:read']],
-    denormalizationContext: ['groups' => ['qcm:write']]
+    normalizationContext: ['groups' => ['sport:read']],
+    denormalizationContext: ['groups' => ['sport:write']]
 )]
 class Sport
 {
@@ -39,12 +40,21 @@ class Sport
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['sport:read'])]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'enum')]
+    /**
+     * @var SportTypeEnum|null Type du sport.
+     */
+    #[ORM\Column(type: 'enum', enumType: SportTypeEnum::class)]
+    #[Groups(['sport:read', 'sport:write'])]
     private ?SportTypeEnum $type = null;
 
+    /**
+     * @var string|null Nom du sport.
+     */
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['sport:read', 'sport:write'])]
     private ?string $name = null;
 
     /**
@@ -56,11 +66,19 @@ class Sport
         return $this->id;
     }
 
+    /**
+     * Renvoie le type du sport.
+     * @return SportTypeEnum|null
+     */
     public function getType(): ?SportTypeEnum
     {
         return $this->type;
     }
 
+    /**
+     * Modifie le type du sport.
+     * @return static
+     */
     public function setType(?SportTypeEnum $type): static
     {
         $this->type = $type;
@@ -68,11 +86,19 @@ class Sport
         return $this;
     }
 
+    /**
+     * Renvoie le nom du sport.
+     * @return string|null
+     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
+    /**
+     * Modifie le nom du sport.
+     * @return static
+     */
     public function setName(string $name): static
     {
         $this->name = $name;

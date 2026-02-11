@@ -10,7 +10,10 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Repository\ChampionnatRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Entité Championnat.<br>
@@ -27,24 +30,38 @@ use Doctrine\ORM\Mapping as ORM;
         new Patch(),
         new Delete()
     ],
-    normalizationContext: ['groups' => ['qcm:read']],
-    denormalizationContext: ['groups' => ['qcm:write']]
+    normalizationContext: ['groups' => ['championnat:read']],
+    denormalizationContext: ['groups' => ['championnat:write']]
 )]
 class Championnat
 {
+    public function __construct()
+    {
+        $this->competitions = new ArrayCollection();
+    }
+
     /**
      * @var int|null Identifiant du championnat.
      */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['championnat:read'])]
     private ?int $id = null;
 
+    /**
+     * @var string|null Nom du championnat.
+     */
     #[ORM\Column(length: 255)]
+    #[Groups(['championnat:read', 'championnat:write'])]
     private ?string $name = null;
 
-    #[ORM\ManyToOne(cascade: ['persist', 'remove'])]
-    private ?Competition $competition_id = null;
+    /**
+     * @var Collection|null Competitions du championnat.
+     */
+    #[ORM\OneToMany(targetEntity: Competition::class, mappedBy: 'championnat', cascade: ['persist', 'remove'])]
+    #[Groups(['championnat:read'])]
+    private ?Collection $competitions = null;
 
     /**
      * Renvoie l'identifiant du championnat.
@@ -76,15 +93,22 @@ class Championnat
         return $this;
     }
 
-    public function getCompetitionId(): ?Competition
+    /**
+     * Renvoie les compétitions du championnat
+     * @return Collection|null
+     */
+    public function getCompetitions(): ?Collection
     {
-        return $this->competition_id;
+        return $this->competitions;
     }
 
-
-    public function setCompetitionId(?Competition $competition_id): static
+    /**
+     * Modifie les compétitions du championnat
+     * @return static
+     */
+    public function setCompetitions(?Collection $competitions): static
     {
-        $this->competition_id = $competition_id;
+        $this->competitions = $competitions;
 
         return $this;
     }

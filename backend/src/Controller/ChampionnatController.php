@@ -26,6 +26,7 @@ final class ChampionnatController extends AbstractController
 
     /**
      * Récupère les détails des championnats pour la page championnat.
+     * @return
      */
     public function getChampionnatDetails(): Response
     {
