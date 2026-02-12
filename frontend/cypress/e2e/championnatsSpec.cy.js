@@ -5,6 +5,6 @@ describe('The Championnat Page', () => {
 });
 
 cy.get('championnats-page').should('exist').should('be.visible');
-cy.visit('http://localhost:5173/championnats/1');
+cy.visit('http://localhost:5173/championnats/{id}');
 cy.get('main-content container').should('exist').should('be.visible');
 
