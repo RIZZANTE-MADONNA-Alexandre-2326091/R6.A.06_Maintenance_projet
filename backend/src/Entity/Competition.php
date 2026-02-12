@@ -29,8 +29,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Patch(),
         new Delete(),
     ],
-    normalizationContext: ['groups' => ['sport:read']],
-    denormalizationContext: ['groups' => ['sport:write']]
+    normalizationContext: ['groups' => ['competition:read']],
+    denormalizationContext: ['groups' => ['competition:write']]
 )]
 class Competition
 {
@@ -61,7 +61,7 @@ class Competition
      */
     #[ORM\OneToMany(targetEntity: Epreuve::class, mappedBy: 'competition', cascade: ['persist', 'remove'])]
     #[Groups(['competition:read'])]
-    private ?Collection $epreuves;
+    private ?Collection $epreuves = null;
 
     /**
      * Renvoie l'identifiant de la compétition.
@@ -73,8 +73,6 @@ class Competition
 
     /**
      * Renvoie le nom de la compétition.
-     *
-     * @return int|null
      */
     public function getName(): ?string
     {

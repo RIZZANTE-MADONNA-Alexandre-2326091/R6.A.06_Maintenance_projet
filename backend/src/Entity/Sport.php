@@ -11,6 +11,8 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Enum\SportTypeEnum;
 use App\Repository\SportRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -58,6 +60,20 @@ class Sport
     private ?string $name = null;
 
     /**
+     * Constructeur de l'entité.
+     */
+    public function __construct()
+    {
+        $this->epreuves = new ArrayCollection();
+    }
+
+    /**
+     * @var Collection|null Epreuves liées au sport
+     */
+    #[ORM\OneToMany(targetEntity: Epreuve::class, mappedBy: 'sport')]
+    private ?Collection $epreuves;
+
+    /**
      * Renvoie l'identifiant du sport.
      */
     public function getId(): ?int
@@ -97,6 +113,24 @@ class Sport
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Renvoie les épreuves liées au sport.
+     */
+    public function getEpreuves(): ?Collection
+    {
+        return $this->epreuves;
+    }
+
+    /**
+     * Modifie les épreuves liées au sport.
+     */
+    public function setEpreuves(Collection $epreuves): static
+    {
+        $this->epreuves = $epreuves;
 
         return $this;
     }
