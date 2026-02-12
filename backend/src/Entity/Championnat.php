@@ -35,6 +35,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class Championnat
 {
+    /**
+     * Constructeur de la classe Championnat.
+     */
     public function __construct()
     {
         $this->competitions = new ArrayCollection();
@@ -57,7 +60,7 @@ class Championnat
     private ?string $name = null;
 
     /**
-     * @var Collection|null Competitions du championnat.
+     * @var Collection|null Liste des compétitions associées à ce championnat.
      */
     #[ORM\OneToMany(targetEntity: Competition::class, mappedBy: 'championnat', cascade: ['persist', 'remove'])]
     #[Groups(['championnat:read'])]
@@ -65,6 +68,7 @@ class Championnat
 
     /**
      * Renvoie l'identifiant du championnat.
+     * 
      * @return int|null
      */
     public function getId(): ?int
@@ -73,7 +77,8 @@ class Championnat
     }
 
     /**
-     * Renvoie le nom du championnat
+     * Renvoie le nom du championnat.
+     * 
      * @return string|null
      */
     public function getName(): ?string
@@ -82,7 +87,8 @@ class Championnat
     }
 
     /**
-     * Change le nom du championnat
+     * Définit le nom du championnat.
+     * 
      * @param string $name
      * @return static
      */
@@ -94,7 +100,8 @@ class Championnat
     }
 
     /**
-     * Renvoie les compétitions du championnat
+     * Renvoie la collection des compétitions du championnat.
+     * 
      * @return Collection|null
      */
     public function getCompetitions(): ?Collection
@@ -103,7 +110,9 @@ class Championnat
     }
 
     /**
-     * Modifie les compétitions du championnat
+     * Définit la collection des compétitions du championnat.
+     * 
+     * @param Collection|null $competitions
      * @return static
      */
     public function setCompetitions(?Collection $competitions): static

@@ -37,8 +37,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
-     * Renvoie l'identifiant de l'utilisateur.
-     * @return int|null
+     * @var int|null Identifiant de l'utilisateur.
      */
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -47,22 +46,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     /**
-     * Renvoie l'email de l'utilisateur.
-     * @return int|null
+     * @var string|null Adresse email de l'utilisateur.
      */
     #[ORM\Column(length: 180)]
     #[Groups(['user:read', 'user:write'])]
     private ?string $email = null;
 
     /**
-     * @var list<string> The user roles
+     * @var list<string> Les rôles de l'utilisateur.
      */
     #[ORM\Column]
     #[Groups(['user:read', 'user:write'])]
     private array $roles = [];
 
     /**
-     * @var string The hashed password
+     * @var string|null Le mot de passe haché de l'utilisateur.
      */
     #[ORM\Column]
     #[Groups(['user:write'])]
@@ -70,6 +68,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Renvoie l'identifiant de l'utilisateur.
+     * 
      * @return int|null
      */
     public function getId(): ?int
@@ -79,6 +78,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Renvoie l'email de l'utilisateur.
+     * 
      * @return string|null
      */
     public function getEmail(): ?string
@@ -87,8 +87,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * Modifie l'email de l'utilisateur.
-     * @return string|null
+     * Définit l'email de l'utilisateur.
+     * 
+     * @param string $email
+     * @return static
      */
     public function setEmail(string $email): static
     {
@@ -98,9 +100,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * A visual identifier that represents this user.
+     * Identifiant visuel représentant l'utilisateur.
      *
      * @see UserInterface
+     * @return string
      */
     public function getUserIdentifier(): string
     {
@@ -108,19 +111,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * Renvoie les rôles de l'utilisateur.
+     * 
      * @see UserInterface
+     * @return array
      */
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
+        // Garantie que chaque utilisateur a au moins le rôle ROLE_USER
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
     }
 
     /**
+     * Définit les rôles de l'utilisateur.
+     * 
      * @param list<string> $roles
+     * @return static
      */
     public function setRoles(array $roles): static
     {
@@ -130,6 +139,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * Renvoie le mot de passe haché.
+     * 
      * @see PasswordAuthenticatedUserInterface
      * @return string|null
      */
@@ -140,6 +151,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
 
     /**
+     * Définit le mot de passe haché.
+     * 
      * @see PasswordAuthenticatedUserInterface
      * @param string $password
      * @return static
@@ -151,9 +164,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    #[\Deprecated]
+    /**
+     * Supprime les informations sensibles de l'utilisateur.
+     */
     public function eraseCredentials(): void
     {
-        // @deprecated, to be removed when upgrading to Symfony 8
+        // Utile si vous stockez des données sensibles temporaires sur l'utilisateur
     }
 }

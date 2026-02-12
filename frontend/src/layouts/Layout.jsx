@@ -37,8 +37,8 @@ const Layout = () => {
                         <Link to="/championnats" className={`nav-link ${isActive('/championnats')}`} onClick={() => setIsMenuOpen(false)}>
                             Championnats
                         </Link>
-                        <Link to="/connexion" className={`nav-link ${isActive('/connexion')}`} onClick={() => setIsMenuOpen(false)}>
-                            Connexion
+                        <Link to="/gestion" className={`nav-link ${isActive('/gestion')}`} onClick={() => setIsMenuOpen(false)}>
+                            Gestion
                         </Link>
                     </nav>
                 </div>

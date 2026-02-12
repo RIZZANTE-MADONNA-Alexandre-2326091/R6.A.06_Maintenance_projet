@@ -59,6 +59,7 @@ class Sport
 
     /**
      * Renvoie l'identifiant du sport.
+     * 
      * @return int|null
      */
     public function getId(): ?int
@@ -68,6 +69,7 @@ class Sport
 
     /**
      * Renvoie le type du sport.
+     * 
      * @return SportTypeEnum|null
      */
     public function getType(): ?SportTypeEnum
@@ -76,7 +78,9 @@ class Sport
     }
 
     /**
-     * Modifie le type du sport.
+     * Définit le type du sport.
+     * 
+     * @param SportTypeEnum|null $type
      * @return static
      */
     public function setType(?SportTypeEnum $type): static
@@ -88,6 +92,7 @@ class Sport
 
     /**
      * Renvoie le nom du sport.
+     * 
      * @return string|null
      */
     public function getName(): ?string
@@ -96,7 +101,9 @@ class Sport
     }
 
     /**
-     * Modifie le nom du sport.
+     * Définit le nom du sport.
+     * 
+     * @param string $name
      * @return static
      */
     public function setName(string $name): static

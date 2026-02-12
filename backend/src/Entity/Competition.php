@@ -51,13 +51,14 @@ class Competition
     private ?string $name = null;
 
     /**
-     * @var Championnat|null Championnat dont la compétition appartient.
+     * @var Championnat|null Championnat auquel la compétition appartient.
      */
     #[ORM\ManyToOne(targetEntity: Championnat::class, inversedBy: 'competitions')]
+    #[Groups(['competition:read', 'competition:write', 'championnat:read'])]
     private ?Championnat $championnat = null;
 
     /**
-     * @var Collection|null Epreuves du championnat.
+     * @var Collection|null Liste des épreuves associées à cette compétition.
      */
     #[ORM\OneToMany(targetEntity: Epreuve::class, mappedBy: 'competition', cascade: ['persist', 'remove'])]
     #[Groups(['competition:read', 'championnat:read'])]
@@ -65,6 +66,7 @@ class Competition
 
     /**
      * Renvoie l'identifiant de la compétition.
+     * 
      * @return int|null
      */
     public function getId(): ?int
@@ -74,7 +76,8 @@ class Competition
 
     /**
      * Renvoie le nom de la compétition.
-     * @return int|null
+     * 
+     * @return string|null
      */
     public function getName(): ?string
     {
@@ -82,7 +85,9 @@ class Competition
     }
 
     /**
-     * Modifie le nom de la competition
+     * Définit le nom de la compétition.
+     * 
+     * @param string $name
      * @return static
      */
     public function setName(string $name): static
@@ -93,7 +98,8 @@ class Competition
     }
 
     /**
-     * Renvoie les épreuves de la compétition
+     * Renvoie la collection des épreuves de la compétition.
+     * 
      * @return Collection|null
      */
     public function getEpreuves(): ?Collection
@@ -102,7 +108,9 @@ class Competition
     }
 
     /**
-     * Modifie les épreuves de la compétition
+     * Définit la collection des épreuves de la compétition.
+     * 
+     * @param Collection|null $epreuves
      * @return static
      */
     public function setEpreuves(?Collection $epreuves): static
@@ -113,6 +121,8 @@ class Competition
     }
 
     /**
+     * Renvoie le championnat parent de la compétition.
+     * 
      * @return Championnat|null
      */
     public function getChampionnat(): ?Championnat
@@ -121,7 +131,10 @@ class Competition
     }
 
     /**
+     * Définit le championnat parent de la compétition.
+     * 
      * @param Championnat|null $championnat
+     * @return static
      */
     public function setChampionnat(?Championnat $championnat): static
     {

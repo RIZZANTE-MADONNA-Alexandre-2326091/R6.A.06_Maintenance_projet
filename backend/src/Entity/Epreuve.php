@@ -50,16 +50,24 @@ class Epreuve
     #[Groups(['epreuve:read', 'epreuve:write', 'competition:read', 'championnat:read'])]
     private ?string $name = null;
 
+    /**
+     * @var Competition|null Compétition à laquelle l'épreuve appartient.
+     */
     #[ORM\ManyToOne(targetEntity: Competition::class, inversedBy: 'epreuves')]
+    #[Groups(['epreuve:read', 'epreuve:write', 'competition:read', 'championnat:read'])]
     private ?Competition $competition = null;
 
+    /**
+     * @var Sport|null Sport associé à l'épreuve.
+     */
     #[ORM\ManyToOne(targetEntity: Sport::class)]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['epreuve:read', 'competition:read', 'championnat:read'])]
+    #[Groups(['epreuve:read', 'epreuve:write', 'competition:read', 'championnat:read'])]
     private ?Sport $sport = null;
 
     /**
      * Renvoie l'identifiant de l'épreuve.
+     * 
      * @return int|null
      */
     public function getId(): ?int
@@ -69,6 +77,7 @@ class Epreuve
 
     /**
      * Renvoie le nom de l'épreuve.
+     * 
      * @return string|null
      */
     public function getName(): ?string
@@ -77,7 +86,9 @@ class Epreuve
     }
 
     /**
-     * Modifie le nom de l'épreuve.
+     * Définit le nom de l'épreuve.
+     * 
+     * @param string $name
      * @return static
      */
     public function setName(string $name): static
@@ -88,7 +99,8 @@ class Epreuve
     }
 
     /**
-     * Renvoie le sport de l'épreuve
+     * Renvoie le sport de l'épreuve.
+     * 
      * @return Sport|null
      */
     public function getSport(): ?Sport
@@ -97,7 +109,9 @@ class Epreuve
     }
 
     /**
-     * Modifie le sport de l'épreuve
+     * Définit le sport de l'épreuve.
+     * 
+     * @param Sport|null $sport
      * @return static
      */
     public function setSport(?Sport $sport): static
@@ -108,6 +122,8 @@ class Epreuve
     }
 
     /**
+     * Renvoie la compétition à laquelle l'épreuve appartient.
+     * 
      * @return Competition|null
      */
     public function getCompetition(): ?Competition
@@ -116,7 +132,10 @@ class Epreuve
     }
 
     /**
+     * Définit la compétition à laquelle l'épreuve appartient.
+     * 
      * @param Competition|null $competition
+     * @return static
      */
     public function setCompetition(?Competition $competition): static
     {
