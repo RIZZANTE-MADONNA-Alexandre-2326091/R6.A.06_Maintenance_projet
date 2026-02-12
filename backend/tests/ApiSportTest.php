@@ -29,15 +29,15 @@ class ApiSportTest extends ApiTestCase
         $response = static::createClient()->request('POST', '/api/sports', [
             'json' => [
                 'name' => 'Football',
-                'type' => 'equipe'
-            ]
+                'type' => 'equipe',
+            ],
         ]);
 
         $this->assertResponseStatusCodeSame(201);
         $this->assertResponseIsSuccessful();
         $this->assertJsonContains([
             'name' => 'Football',
-            'type' => 'equipe'
+            'type' => 'equipe',
         ]);
         $this->assertMatchesRegularExpression('~^/api/sports/\d+$~', $response->toArray()['@id']);
     }
@@ -52,8 +52,8 @@ class ApiSportTest extends ApiTestCase
         $response = $client->request('POST', '/api/sports', [
             'json' => [
                 'name' => 'Basketball',
-                'type' => 'equipe'
-            ]
+                'type' => 'equipe',
+            ],
         ]);
         $id = $response->toArray()['id'];
 
@@ -65,7 +65,7 @@ class ApiSportTest extends ApiTestCase
         $this->assertJsonContains([
             'id' => $id,
             'name' => 'Basketball',
-            'type' => 'equipe'
+            'type' => 'equipe',
         ]);
     }
 
@@ -79,8 +79,8 @@ class ApiSportTest extends ApiTestCase
         $response = $client->request('POST', '/api/sports', [
             'json' => [
                 'name' => 'Tennis',
-                'type' => 'individuel'
-            ]
+                'type' => 'individuel',
+            ],
         ]);
         $iri = $response->toArray()['@id'];
 
@@ -88,14 +88,14 @@ class ApiSportTest extends ApiTestCase
         $client->request('PUT', $iri, [
             'json' => [
                 'name' => 'Tennis de Table',
-                'type' => 'individuel'
-            ]
+                'type' => 'individuel',
+            ],
         ]);
 
         $this->assertResponseStatusCodeSame(200);
         $this->assertJsonContains([
             'name' => 'Tennis de Table',
-            'type' => 'individuel'
+            'type' => 'individuel',
         ]);
     }
 
@@ -109,8 +109,8 @@ class ApiSportTest extends ApiTestCase
         $response = $client->request('POST', '/api/sports', [
             'json' => [
                 'name' => 'Volley',
-                'type' => 'equipe'
-            ]
+                'type' => 'equipe',
+            ],
         ]);
         $iri = $response->toArray()['@id'];
 
@@ -118,14 +118,14 @@ class ApiSportTest extends ApiTestCase
         $client->request('PATCH', $iri, [
             'headers' => ['Content-Type' => 'application/merge-patch+json'],
             'json' => [
-                'name' => 'Volley-ball'
-            ]
+                'name' => 'Volley-ball',
+            ],
         ]);
 
         $this->assertResponseStatusCodeSame(200);
         $this->assertJsonContains([
             'name' => 'Volley-ball',
-            'type' => 'equipe'
+            'type' => 'equipe',
         ]);
     }
 
@@ -139,8 +139,8 @@ class ApiSportTest extends ApiTestCase
         $response = $client->request('POST', '/api/sports', [
             'json' => [
                 'name' => 'Rugby',
-                'type' => 'equipe'
-            ]
+                'type' => 'equipe',
+            ],
         ]);
         $iri = $response->toArray()['@id'];
 
@@ -161,8 +161,8 @@ class ApiSportTest extends ApiTestCase
         static::createClient()->request('POST', '/api/sports', [
             'json' => [
                 'name' => '', // nom vide
-                'type' => 'invalide' // type invalide
-            ]
+                'type' => 'invalide', // type invalide
+            ],
         ]);
 
         $this->assertResponseStatusCodeSame(422);
@@ -185,8 +185,8 @@ class ApiSportTest extends ApiTestCase
         static::createClient()->request('PUT', '/api/sports/99999', [
             'json' => [
                 'name' => 'Sport inexistant',
-                'type' => 'individuel'
-            ]
+                'type' => 'individuel',
+            ],
         ]);
         $this->assertResponseStatusCodeSame(404);
     }

@@ -28,14 +28,14 @@ class ApiCompetitionTest extends ApiTestCase
     {
         $response = static::createClient()->request('POST', '/api/competitions', [
             'json' => [
-                'name' => 'Compétition Nationale'
-            ]
+                'name' => 'Compétition Nationale',
+            ],
         ]);
 
         $this->assertResponseStatusCodeSame(201);
         $this->assertResponseIsSuccessful();
         $this->assertJsonContains([
-            'name' => 'Compétition Nationale'
+            'name' => 'Compétition Nationale',
         ]);
         $this->assertMatchesRegularExpression('~^/api/competitions/\d+$~', $response->toArray()['@id']);
     }
@@ -46,12 +46,12 @@ class ApiCompetitionTest extends ApiTestCase
     public function testCreateCompetitionWithEpreuve(): void
     {
         $client = static::createClient();
-        
+
         // Créer d'abord une épreuve
         $epreuveResponse = $client->request('POST', '/api/epreuves', [
             'json' => [
-                'name' => 'Épreuve Test'
-            ]
+                'name' => 'Épreuve Test',
+            ],
         ]);
         $epreuveIri = $epreuveResponse->toArray()['@id'];
 
@@ -59,13 +59,13 @@ class ApiCompetitionTest extends ApiTestCase
         $response = $client->request('POST', '/api/competitions', [
             'json' => [
                 'name' => 'Compétition Régionale',
-                'epreuve_id' => $epreuveIri
-            ]
+                'epreuve_id' => $epreuveIri,
+            ],
         ]);
 
         $this->assertResponseStatusCodeSame(201);
         $this->assertJsonContains([
-            'name' => 'Compétition Régionale'
+            'name' => 'Compétition Régionale',
         ]);
     }
 
@@ -78,8 +78,8 @@ class ApiCompetitionTest extends ApiTestCase
         $client = static::createClient();
         $response = $client->request('POST', '/api/competitions', [
             'json' => [
-                'name' => 'Compétition Départementale'
-            ]
+                'name' => 'Compétition Départementale',
+            ],
         ]);
         $id = $response->toArray()['id'];
 
@@ -90,7 +90,7 @@ class ApiCompetitionTest extends ApiTestCase
         $this->assertResponseIsSuccessful();
         $this->assertJsonContains([
             'id' => $id,
-            'name' => 'Compétition Départementale'
+            'name' => 'Compétition Départementale',
         ]);
     }
 
@@ -103,21 +103,21 @@ class ApiCompetitionTest extends ApiTestCase
         $client = static::createClient();
         $response = $client->request('POST', '/api/competitions', [
             'json' => [
-                'name' => 'Compétition Junior'
-            ]
+                'name' => 'Compétition Junior',
+            ],
         ]);
         $iri = $response->toArray()['@id'];
 
         // Mettre à jour la compétition
         $client->request('PUT', $iri, [
             'json' => [
-                'name' => 'Compétition Senior'
-            ]
+                'name' => 'Compétition Senior',
+            ],
         ]);
 
         $this->assertResponseStatusCodeSame(200);
         $this->assertJsonContains([
-            'name' => 'Compétition Senior'
+            'name' => 'Compétition Senior',
         ]);
     }
 
@@ -130,8 +130,8 @@ class ApiCompetitionTest extends ApiTestCase
         $client = static::createClient();
         $response = $client->request('POST', '/api/competitions', [
             'json' => [
-                'name' => 'Compétition Cadets'
-            ]
+                'name' => 'Compétition Cadets',
+            ],
         ]);
         $iri = $response->toArray()['@id'];
 
@@ -139,13 +139,13 @@ class ApiCompetitionTest extends ApiTestCase
         $client->request('PATCH', $iri, [
             'headers' => ['Content-Type' => 'application/merge-patch+json'],
             'json' => [
-                'name' => 'Compétition Minimes'
-            ]
+                'name' => 'Compétition Minimes',
+            ],
         ]);
 
         $this->assertResponseStatusCodeSame(200);
         $this->assertJsonContains([
-            'name' => 'Compétition Minimes'
+            'name' => 'Compétition Minimes',
         ]);
     }
 
@@ -158,8 +158,8 @@ class ApiCompetitionTest extends ApiTestCase
         $client = static::createClient();
         $response = $client->request('POST', '/api/competitions', [
             'json' => [
-                'name' => 'Compétition à supprimer'
-            ]
+                'name' => 'Compétition à supprimer',
+            ],
         ]);
         $iri = $response->toArray()['@id'];
 
@@ -179,8 +179,8 @@ class ApiCompetitionTest extends ApiTestCase
     {
         static::createClient()->request('POST', '/api/competitions', [
             'json' => [
-                'name' => ''
-            ]
+                'name' => '',
+            ],
         ]);
 
         $this->assertResponseStatusCodeSame(422);
@@ -202,8 +202,8 @@ class ApiCompetitionTest extends ApiTestCase
     {
         static::createClient()->request('PUT', '/api/competitions/99999', [
             'json' => [
-                'name' => 'Compétition inexistante'
-            ]
+                'name' => 'Compétition inexistante',
+            ],
         ]);
         $this->assertResponseStatusCodeSame(404);
     }

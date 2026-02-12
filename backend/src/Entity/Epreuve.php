@@ -27,7 +27,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Post(),
         new Put(),
         new Patch(),
-        new Delete()
+        new Delete(),
     ],
     normalizationContext: ['groups' => ['epreuve:read']],
     denormalizationContext: ['groups' => ['epreuve:write']]
@@ -35,7 +35,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Epreuve
 {
     /**
-     * @var int|null Identifiant de l'épreuve.
+     * @var int|null identifiant de l'épreuve
      */
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -44,7 +44,7 @@ class Epreuve
     private ?int $id = null;
 
     /**
-     * @var string|null Nom de l'épreuve.
+     * @var string|null nom de l'épreuve
      */
     #[ORM\Column(length: 255)]
     #[Groups(['epreuve:read', 'epreuve:write'])]
@@ -59,7 +59,6 @@ class Epreuve
 
     /**
      * Renvoie l'identifiant de l'épreuve.
-     * @return int|null
      */
     public function getId(): ?int
     {
@@ -68,7 +67,6 @@ class Epreuve
 
     /**
      * Renvoie le nom de l'épreuve.
-     * @return string|null
      */
     public function getName(): ?string
     {
@@ -77,7 +75,6 @@ class Epreuve
 
     /**
      * Modifie le nom de l'épreuve.
-     * @return static
      */
     public function setName(string $name): static
     {
@@ -87,8 +84,7 @@ class Epreuve
     }
 
     /**
-     * Renvoie les identifiants des sports de l'épreuve
-     * @return Collection|null
+     * Renvoie les identifiants des sports de l'épreuve.
      */
     public function getSportId(): ?Collection
     {
@@ -96,8 +92,7 @@ class Epreuve
     }
 
     /**
-     * Modifie les identifiants des sports de l'épreuve
-     * @return static
+     * Modifie les identifiants des sports de l'épreuve.
      */
     public function setSportId(?Collection $sport_id): static
     {
@@ -106,20 +101,15 @@ class Epreuve
         return $this;
     }
 
-    /**
-     * @return Competition|null
-     */
     public function getCompetition(): ?Competition
     {
         return $this->competition;
     }
 
-    /**
-     * @param Competition|null $competition
-     */
     public function setCompetition(?Competition $competition): static
     {
         $this->competition = $competition;
+
         return $this;
     }
 }

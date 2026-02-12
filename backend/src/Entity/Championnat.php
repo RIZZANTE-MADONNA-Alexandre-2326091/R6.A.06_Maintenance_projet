@@ -11,8 +11,8 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Repository\ChampionnatRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
@@ -28,7 +28,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Post(),
         new Put(),
         new Patch(),
-        new Delete()
+        new Delete(),
     ],
     normalizationContext: ['groups' => ['championnat:read']],
     denormalizationContext: ['groups' => ['championnat:write']]
@@ -41,7 +41,7 @@ class Championnat
     }
 
     /**
-     * @var int|null Identifiant du championnat.
+     * @var int|null identifiant du championnat
      */
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -50,14 +50,14 @@ class Championnat
     private ?int $id = null;
 
     /**
-     * @var string|null Nom du championnat.
+     * @var string|null nom du championnat
      */
     #[ORM\Column(length: 255)]
     #[Groups(['championnat:read', 'championnat:write'])]
     private ?string $name = null;
 
     /**
-     * @var Collection|null Competitions du championnat.
+     * @var Collection|null competitions du championnat
      */
     #[ORM\OneToMany(targetEntity: Competition::class, mappedBy: 'championnat', cascade: ['persist', 'remove'])]
     #[Groups(['championnat:read'])]
@@ -65,7 +65,6 @@ class Championnat
 
     /**
      * Renvoie l'identifiant du championnat.
-     * @return int|null
      */
     public function getId(): ?int
     {
@@ -73,8 +72,7 @@ class Championnat
     }
 
     /**
-     * Renvoie le nom du championnat
-     * @return string|null
+     * Renvoie le nom du championnat.
      */
     public function getName(): ?string
     {
@@ -82,9 +80,7 @@ class Championnat
     }
 
     /**
-     * Change le nom du championnat
-     * @param string $name
-     * @return static
+     * Change le nom du championnat.
      */
     public function setName(string $name): static
     {
@@ -94,8 +90,7 @@ class Championnat
     }
 
     /**
-     * Renvoie les compétitions du championnat
-     * @return Collection|null
+     * Renvoie les compétitions du championnat.
      */
     public function getCompetitions(): ?Collection
     {
@@ -103,8 +98,7 @@ class Championnat
     }
 
     /**
-     * Modifie les compétitions du championnat
-     * @return static
+     * Modifie les compétitions du championnat.
      */
     public function setCompetitions(?Collection $competitions): static
     {

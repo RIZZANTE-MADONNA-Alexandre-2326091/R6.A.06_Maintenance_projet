@@ -28,14 +28,14 @@ class ApiEpreuveTest extends ApiTestCase
     {
         $response = static::createClient()->request('POST', '/api/epreuves', [
             'json' => [
-                'name' => '100m Haies'
-            ]
+                'name' => '100m Haies',
+            ],
         ]);
 
         $this->assertResponseStatusCodeSame(201);
         $this->assertResponseIsSuccessful();
         $this->assertJsonContains([
-            'name' => '100m Haies'
+            'name' => '100m Haies',
         ]);
         $this->assertMatchesRegularExpression('~^/api/epreuves/\d+$~', $response->toArray()['@id']);
     }
@@ -46,13 +46,13 @@ class ApiEpreuveTest extends ApiTestCase
     public function testCreateEpreuveWithSport(): void
     {
         $client = static::createClient();
-        
+
         // Créer d'abord un sport
         $sportResponse = $client->request('POST', '/api/sports', [
             'json' => [
                 'name' => 'Athlétisme',
-                'type' => 'individuel'
-            ]
+                'type' => 'individuel',
+            ],
         ]);
         $sportIri = $sportResponse->toArray()['@id'];
 
@@ -60,13 +60,13 @@ class ApiEpreuveTest extends ApiTestCase
         $response = $client->request('POST', '/api/epreuves', [
             'json' => [
                 'name' => '200m',
-                'sport_id' => $sportIri
-            ]
+                'sport_id' => $sportIri,
+            ],
         ]);
 
         $this->assertResponseStatusCodeSame(201);
         $this->assertJsonContains([
-            'name' => '200m'
+            'name' => '200m',
         ]);
     }
 
@@ -79,8 +79,8 @@ class ApiEpreuveTest extends ApiTestCase
         $client = static::createClient();
         $response = $client->request('POST', '/api/epreuves', [
             'json' => [
-                'name' => 'Saut en longueur'
-            ]
+                'name' => 'Saut en longueur',
+            ],
         ]);
         $id = $response->toArray()['id'];
 
@@ -91,7 +91,7 @@ class ApiEpreuveTest extends ApiTestCase
         $this->assertResponseIsSuccessful();
         $this->assertJsonContains([
             'id' => $id,
-            'name' => 'Saut en longueur'
+            'name' => 'Saut en longueur',
         ]);
     }
 
@@ -104,21 +104,21 @@ class ApiEpreuveTest extends ApiTestCase
         $client = static::createClient();
         $response = $client->request('POST', '/api/epreuves', [
             'json' => [
-                'name' => 'Saut en hauteur'
-            ]
+                'name' => 'Saut en hauteur',
+            ],
         ]);
         $iri = $response->toArray()['@id'];
 
         // Mettre à jour l'épreuve
         $client->request('PUT', $iri, [
             'json' => [
-                'name' => 'Triple saut'
-            ]
+                'name' => 'Triple saut',
+            ],
         ]);
 
         $this->assertResponseStatusCodeSame(200);
         $this->assertJsonContains([
-            'name' => 'Triple saut'
+            'name' => 'Triple saut',
         ]);
     }
 
@@ -131,8 +131,8 @@ class ApiEpreuveTest extends ApiTestCase
         $client = static::createClient();
         $response = $client->request('POST', '/api/epreuves', [
             'json' => [
-                'name' => 'Lancer de poids'
-            ]
+                'name' => 'Lancer de poids',
+            ],
         ]);
         $iri = $response->toArray()['@id'];
 
@@ -140,13 +140,13 @@ class ApiEpreuveTest extends ApiTestCase
         $client->request('PATCH', $iri, [
             'headers' => ['Content-Type' => 'application/merge-patch+json'],
             'json' => [
-                'name' => 'Lancer du marteau'
-            ]
+                'name' => 'Lancer du marteau',
+            ],
         ]);
 
         $this->assertResponseStatusCodeSame(200);
         $this->assertJsonContains([
-            'name' => 'Lancer du marteau'
+            'name' => 'Lancer du marteau',
         ]);
     }
 
@@ -159,8 +159,8 @@ class ApiEpreuveTest extends ApiTestCase
         $client = static::createClient();
         $response = $client->request('POST', '/api/epreuves', [
             'json' => [
-                'name' => 'Épreuve à supprimer'
-            ]
+                'name' => 'Épreuve à supprimer',
+            ],
         ]);
         $iri = $response->toArray()['@id'];
 
@@ -180,8 +180,8 @@ class ApiEpreuveTest extends ApiTestCase
     {
         static::createClient()->request('POST', '/api/epreuves', [
             'json' => [
-                'name' => ''
-            ]
+                'name' => '',
+            ],
         ]);
 
         $this->assertResponseStatusCodeSame(422);
@@ -203,8 +203,8 @@ class ApiEpreuveTest extends ApiTestCase
     {
         static::createClient()->request('PUT', '/api/epreuves/99999', [
             'json' => [
-                'name' => 'Épreuve inexistante'
-            ]
+                'name' => 'Épreuve inexistante',
+            ],
         ]);
         $this->assertResponseStatusCodeSame(404);
     }

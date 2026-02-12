@@ -21,7 +21,7 @@ if (method_exists(Dotenv::class, 'bootEnv')) {
         }
     }
 
-    if ($envFile !== null) {
+    if (null !== $envFile) {
         (new Dotenv())->bootEnv($envFile);
     }
 }
