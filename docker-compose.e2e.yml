@@ -30,6 +30,7 @@ services:
   # CYPRESS (Testeur)
   cypress:
     image: cypress/included:13.6.6
+    container_name: cypress_test
     depends_on:
       - frontend_e2e
     environment:

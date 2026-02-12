@@ -26,11 +26,8 @@ pipeline {
 
                         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                             sh 'docker compose -f docker-compose.e2e.yml create cypress'
-                            sh 'docker cp frontend/. $(docker compose -f docker-compose.e2e.yml ps -q cypress):/e2e'
-                            sh 'docker compose -f docker-compose.e2e.yml start -b cypress'
-                            sh 'docker wait $(docker compose -f docker-compose.e2e.yml ps -q cypress)'
-                            
-                            sh 'docker compose -f docker-compose.e2e.yml up cypress --exit-code-from cypress'
+                            sh 'docker cp frontend/. cypress_test:/e2e'
+                            sh 'docker start -i cypress_test'
                         }
 
                     } finally {
