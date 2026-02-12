@@ -6,6 +6,11 @@ services:
       dockerfile: Dockerfile.test
     environment:
       - DATABASE_URL=postgresql://chtiouimaxxing_balk_ans:fF6bdTQfwR@postgresql-chtiouimaxxing.alwaysdata.net:5432/chtiouimaxxing_pg?serverVersion=16&charset=utf8
+      - APP_ENV=test
+      - APP_SECRET=1234
+      - DEFAULT_URI=https://localhost
+      - MAILER_DSN=null://null
+      - CORS_ALLOW_ORIGIN=^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$
     command: tail -f /dev/null
     ports:
       - "8000:8000"
