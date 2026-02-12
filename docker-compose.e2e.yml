@@ -1,0 +1,41 @@
+services:
+  # BACKEND
+  backend_e2e:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.test
+    environment:
+      - DATABASE_URL=postgresql://chtiouimaxxing_balkans:fF6bdTQfwR@postgresql-chtiouimaxxing.alwaysdata.net:5432/chtiouimaxxing_pg?serverVersion=16&charset=utf8
+      - APP_ENV=test
+      - APP_SECRET=1234
+      - DEFAULT_URI=https://localhost
+      - MAILER_DSN=null://null
+      - CORS_ALLOW_ORIGIN=^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$
+    command: tail -f /dev/null
+    ports:
+      - "8000:8000"
+
+  # FRONTEND
+  frontend_e2e:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.test
+    environment:
+      - VITE_API_URL=http://backend_e2e:8000
+    depends_on:
+      - backend_e2e
+    ports:
+      - "3000:3000"
+
+  # CYPRESS (Testeur)
+  cypress:
+    image: cypress/included:13.6.6
+    depends_on:
+      - frontend_e2e
+    environment:
+      - CYPRESS_baseUrl=http://frontend_e2e:3000
+    working_dir: /e2e
+    volumes:
+      - ./frontend:/e2e
+    ipc: host
+    command: cypress run
