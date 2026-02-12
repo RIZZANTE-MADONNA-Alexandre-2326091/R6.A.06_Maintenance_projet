@@ -23,13 +23,4 @@ final class ChampionnatController extends AbstractController
             'controller_name' => 'ChampionnatController',
         ]);
     }
-
-    /**
-     * Récupère les détails des championnats pour la page championnat.
-     * @return
-     */
-    public function getChampionnatDetails(): Response
-    {
-
-    }
 }
