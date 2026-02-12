@@ -71,3 +71,30 @@ Feature: Competition API
       }
       """
     Then the response status code should be 422
+
+  Scenario: Verify fixture competitions are present
+    When I send a GET request to "/api/competitions"
+    Then the response status code should be 200
+    And the response should be in JSON
+    And the JSON should contain at least 7 items in "hydra:member"
+
+  Scenario: Verify Football competition exists in fixtures
+    When I send a GET request to "/api/competitions"
+    Then the response status code should be 200
+    And the JSON array "hydra:member" should contain an item with "name" containing "Football"
+
+  Scenario: Verify Basketball competition exists in fixtures
+    When I send a GET request to "/api/competitions"
+    Then the response status code should be 200
+    And the JSON array "hydra:member" should contain an item with "name" containing "Basketball"
+
+  Scenario: Verify Natation competition exists in fixtures
+    When I send a GET request to "/api/competitions"
+    Then the response status code should be 200
+    And the JSON array "hydra:member" should contain an item with "name" containing "Natation"
+
+  Scenario: Verify competitions from different championships
+    When I send a GET request to "/api/competitions"
+    Then the response status code should be 200
+    And the response should contain competitions from "Bretagne"
+    And the response should contain competitions from "National"

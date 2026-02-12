@@ -216,4 +216,83 @@ class ApiChampionnatTest extends ApiTestCase
         static::createClient()->request('DELETE', '/api/championnats/99999');
         $this->assertResponseStatusCodeSame(404);
     }
+
+    /**
+     * Test des fixtures : vérifier que les championnats des fixtures sont présents.
+     */
+    public function testFixturesChampionnatsArePresent(): void
+    {
+        $response = static::createClient()->request('GET', '/api/championnats');
+        
+        $this->assertResponseStatusCodeSame(200);
+        $data = $response->toArray();
+        
+        // Vérifier qu'il y a au moins 3 championnats (nos fixtures)
+        $this->assertGreaterThanOrEqual(3, $data['hydra:totalItems']);
+        
+        // Vérifier que certains championnats spécifiques existent
+        $championnatNames = array_column($data['hydra:member'], 'name');
+        $this->assertContains('UGSEL Bretagne 2025-2026', $championnatNames);
+        $this->assertContains('UGSEL National 2025-2026', $championnatNames);
+        $this->assertContains('Championnat Départemental 56', $championnatNames);
+    }
+
+    /**
+     * Test des fixtures : vérifier les compétitions associées aux championnats.
+     */
+    public function testFixturesChampionnatsWithCompetitions(): void
+    {
+        $client = static::createClient();
+        $response = $client->request('GET', '/api/championnats');
+        $data = $response->toArray();
+        
+        // Trouver le championnat UGSEL Bretagne
+        $ugselBretagne = array_filter($data['hydra:member'], 
+            fn($c) => $c['name'] === 'UGSEL Bretagne 2025-2026'
+        );
+        
+        if (count($ugselBretagne) > 0) {
+            $championnat = array_values($ugselBretagne)[0];
+            $championnatId = $championnat['id'];
+            
+            // Récupérer le championnat complet avec ses compétitions
+            $response = $client->request('GET', '/api/championnats/' . $championnatId);
+            $champData = $response->toArray();
+            
+            $this->assertResponseStatusCodeSame(200);
+            $this->assertArrayHasKey('competitions', $champData);
+            // Vérifier qu'il y a des compétitions associées
+            $this->assertNotEmpty($champData['competitions']);
+        }
+    }
+
+    /**
+     * Test des fixtures : rechercher un championnat spécifique.
+     */
+    public function testGetSpecificFixtureChampionnat(): void
+    {
+        $client = static::createClient();
+        $response = $client->request('GET', '/api/championnats');
+        $data = $response->toArray();
+        
+        // Trouver le championnat National
+        $nationals = array_filter($data['hydra:member'], 
+            fn($c) => $c['name'] === 'UGSEL National 2025-2026'
+        );
+        
+        if (count($nationals) > 0) {
+            $national = array_values($nationals)[0];
+            $nationalId = $national['id'];
+            
+            // Récupérer le championnat spécifique
+            $response = $client->request('GET', '/api/championnats/' . $nationalId);
+            
+            $this->assertResponseStatusCodeSame(200);
+            $this->assertJsonContains([
+                'id' => $nationalId,
+                'name' => 'UGSEL National 2025-2026'
+            ]);
+        }
+    }
 }
+

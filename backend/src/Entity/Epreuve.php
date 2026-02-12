@@ -50,12 +50,14 @@ class Epreuve
     #[Groups(['epreuve:read', 'epreuve:write'])]
     private ?string $name = null;
 
-    #[ORM\ManyToOne(targetEntity: Competition::class, inversedBy: 'competitions')]
+    #[ORM\ManyToOne(targetEntity: Competition::class, inversedBy: 'epreuves')]
+    #[Groups(['epreuve:read', 'epreuve:write'])]
     private ?Competition $competition = null;
 
-    #[ORM\ManyToOne(targetEntity: Competition::class, cascade: ['persist', 'remove'], inversedBy: 'championnat')]
-    #[Groups(['epreuve:read'])]
-    private ?Collection $sport_id = null;
+    #[ORM\ManyToOne(targetEntity: Sport::class)]
+    #[ORM\JoinColumn(name: 'sport_id', referencedColumnName: 'id')]
+    #[Groups(['epreuve:read', 'epreuve:write'])]
+    private ?Sport $sport = null;
 
     /**
      * Renvoie l'identifiant de l'épreuve.
@@ -87,21 +89,21 @@ class Epreuve
     }
 
     /**
-     * Renvoie les identifiants des sports de l'épreuve
-     * @return Collection|null
+     * Renvoie le sport de l'épreuve
+     * @return Sport|null
      */
-    public function getSportId(): ?Collection
+    public function getSport(): ?Sport
     {
-        return $this->sport_id;
+        return $this->sport;
     }
 
     /**
-     * Modifie les identifiants des sports de l'épreuve
+     * Modifie le sport de l'épreuve
      * @return static
      */
-    public function setSportId(?Collection $sport_id): static
+    public function setSport(?Sport $sport): static
     {
-        $this->sport_id = $sport_id;
+        $this->sport = $sport;
 
         return $this;
     }
