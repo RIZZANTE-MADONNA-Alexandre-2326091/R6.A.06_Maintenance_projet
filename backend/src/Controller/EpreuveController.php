@@ -8,12 +8,14 @@ use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Gère les pages et actions relatives à l'entité Epreuve.
+ *
  * @extends AbstractController
  */
 final class EpreuveController extends AbstractController
 {
     /**
      * Affiche la page Twig des épreuves.
+     *
      * @return Response Réponse de la création de la page
      */
     #[Route('/epreuve', name: 'app_epreuve')]

@@ -10,26 +10,40 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+/**
+ * Commande de test pour saluer un utilisateur.
+ */
 #[AsCommand(
     name: 'app:greet',
-    description: 'Greets a user by name',
+    description: 'Salue un utilisateur par son nom',
 )]
 class GreetCommand extends Command
 {
+    /**
+     * Configure les arguments et options de la commande.
+     */
     protected function configure(): void
     {
         $this
-            ->addArgument('name', InputArgument::REQUIRED, 'The name of the person to greet')
-            ->addOption('yell', null, InputOption::VALUE_NONE, 'If set, the greeting will be in uppercase')
+            ->addArgument('name', InputArgument::REQUIRED, 'Le nom de la personne à saluer')
+            ->addOption('yell', null, InputOption::VALUE_NONE, 'Si défini, la salutation sera en majuscules')
         ;
     }
 
+    /**
+     * Exécute la commande.
+     *
+     * @param InputInterface  $input  Entrée de la console
+     * @param OutputInterface $output Sortie de la console
+     *
+     * @return int Code de statut de la commande
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
         $name = $input->getArgument('name');
 
-        $greeting = sprintf('Hello %s!', $name);
+        $greeting = sprintf('Bonjour %s !', $name);
 
         if ($input->getOption('yell')) {
             $greeting = strtoupper($greeting);
