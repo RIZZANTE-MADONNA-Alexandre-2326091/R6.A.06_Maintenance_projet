@@ -15,7 +15,7 @@ permissions:
   contents: read
 
 jobs:
-  symfony-tests:
+  symfony-backend-tests:
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -71,15 +71,17 @@ jobs:
         DATABASE_URL: "postgresql://user:password@127.0.0.1:5432/symfony_test?serverVersion=15&charset=utf8"
         DEFAULT_URI: "http://localhost"
       run: |
+        touch .env.test.local
         bin/console doctrine:database:create --env=test --if-not-exists
         bin/console doctrine:schema:update --env=test --force
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       working-directory: './backend'
       env:
         fail-fast: true
+        APP_ENV: test
         DATABASE_URL: "postgresql://user:password@127.0.0.1:5432/symfony_test?serverVersion=15&charset=utf8"
         DEFAULT_URI: "http://localhost"
-      run: | 
-        vendor/bin/phpunit tests
+      run: |
         vendor/bin/php-cs-fixer check
+        vendor/bin/phpunit tests
         vendor/bin/behat
