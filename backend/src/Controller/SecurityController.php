@@ -14,8 +14,9 @@ class SecurityController extends AbstractController
 {
     /**
      * Affiche la page de connexion.
-     * 
+     *
      * @param AuthenticationUtils $authenticationUtils Utilitaire d'authentification
+     *
      * @return Response Réponse HTTP
      */
     #[Route(path: '/login', name: 'app_login')]
@@ -35,7 +36,7 @@ class SecurityController extends AbstractController
 
     /**
      * Gère la déconnexion de l'utilisateur.
-     * 
+     *
      * @throws \LogicException
      */
     #[Route(path: '/logout', name: 'app_logout')]

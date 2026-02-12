@@ -19,9 +19,6 @@ class RegistrationFormType extends AbstractType
 {
     /**
      * Construit le formulaire d'inscription.
-     * 
-     * @param FormBuilderInterface $builder
-     * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -55,8 +52,6 @@ class RegistrationFormType extends AbstractType
 
     /**
      * Configure les options du formulaire.
-     * 
-     * @param OptionsResolver $resolver
      */
     public function configureOptions(OptionsResolver $resolver): void
     {

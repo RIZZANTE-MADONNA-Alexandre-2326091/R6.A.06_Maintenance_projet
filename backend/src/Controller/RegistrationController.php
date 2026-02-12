@@ -14,18 +14,19 @@ use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Contrôleur gérant l'inscription des utilisateurs.
- * 
+ *
  * @extends AbstractController
  */
 class RegistrationController extends AbstractController
 {
     /**
      * Gère la requête d'inscription et crée un nouvel utilisateur.
-     * 
-     * @param Request $request La requête HTTP
+     *
+     * @param Request                     $request            La requête HTTP
      * @param UserPasswordHasherInterface $userPasswordHasher Service de hachage de mot de passe
-     * @param Security $security Service de sécurité Symfony
-     * @param EntityManagerInterface $entityManager Gestionnaire d'entités Doctrine
+     * @param Security                    $security           Service de sécurité Symfony
+     * @param EntityManagerInterface      $entityManager      Gestionnaire d'entités Doctrine
+     *
      * @return Response Réponse HTTP
      */
     #[Route('/register', name: 'app_register')]

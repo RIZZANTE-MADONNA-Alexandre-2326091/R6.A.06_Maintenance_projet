@@ -57,14 +57,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $email = null;
 
     /**
-     * @var list<string> Les rôles de l'utilisateur.
+     * @var list<string> les rôles de l'utilisateur
      */
     #[ORM\Column]
     #[Groups(['user:read', 'user:write'])]
     private array $roles = [];
 
     /**
-     * @var string|null Le mot de passe haché de l'utilisateur.
+     * @var string|null le mot de passe haché de l'utilisateur
      */
     #[ORM\Column]
     #[Groups(['user:write'])]
@@ -102,7 +102,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * Identifiant visuel représentant l'utilisateur.
      *
      * @see UserInterface
-     * @return string
      */
     public function getUserIdentifier(): string
     {
@@ -111,9 +110,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Renvoie les rôles de l'utilisateur.
-     * 
+     *
      * @see UserInterface
-     * @return array
      */
     public function getRoles(): array
     {
@@ -126,9 +124,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Définit les rôles de l'utilisateur.
-     * 
+     *
      * @param list<string> $roles
-     * @return static
      */
     public function setRoles(array $roles): static
     {
@@ -139,7 +136,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Renvoie le mot de passe haché.
-     * 
+     *
      * @see PasswordAuthenticatedUserInterface
      */
     public function getPassword(): ?string
@@ -149,7 +146,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Définit le mot de passe haché.
-     * 
+     *
      * @see PasswordAuthenticatedUserInterface
      */
     public function setPassword(string $password): static
