@@ -26,6 +26,12 @@ les tests finaux sur l'interface.
 Le fichier `.github/workflows/symfony.yml`
 permet de tester le backend avant une pull request sur la branche main.
 
+# Jenkins et SonarQube
+
+Une pipeline Jenkins qui contient une analyse SonarQube ont été configurés pour ce projet. 
+
+> [!NOTE]
+Les identifiants ainsi que les URL sont disponibles dans le compte rendu.
 
 Réalisé par:
 - Buchmuller Nassim
