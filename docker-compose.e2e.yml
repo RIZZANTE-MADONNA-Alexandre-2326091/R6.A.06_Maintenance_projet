@@ -26,10 +26,12 @@ services:
       - backend_e2e
     ports:
       - "3000:3000"
+    command: npm run dev -- --host 0.0.0.0
 
   # CYPRESS (Testeur)
   cypress:
-    image: cypress/included:13.6.6
+    image: cypress/included:13.15.1
+    container_name: cypress_test
     depends_on:
       - frontend_e2e
     environment:
