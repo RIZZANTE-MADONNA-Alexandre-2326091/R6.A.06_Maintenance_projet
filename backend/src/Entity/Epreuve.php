@@ -34,7 +34,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Epreuve
 {
     /**
-     * @var int|null identifiant de l'épreuve
+     * @var int|null Identifiant de l'épreuve.
      */
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -43,22 +43,24 @@ class Epreuve
     private ?int $id = null;
 
     /**
-     * @var string|null nom de l'épreuve
+     * @var string|null Nom de l'épreuve.
      */
     #[ORM\Column(length: 255)]
     #[Groups(['epreuve:read', 'epreuve:write'])]
     private ?string $name = null;
 
     #[ORM\ManyToOne(targetEntity: Competition::class, inversedBy: 'epreuves')]
+    #[Groups(['epreuve:read', 'epreuve:write'])]
     private ?Competition $competition = null;
 
-    #[ORM\ManyToOne(targetEntity: Sport::class, inversedBy: 'epreuves')]
-    #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['qcm:read', 'qcm:write'])]
+    #[ORM\ManyToOne(targetEntity: Sport::class)]
+    #[ORM\JoinColumn(name: 'sport_id', referencedColumnName: 'id')]
+    #[Groups(['epreuve:read', 'epreuve:write'])]
     private ?Sport $sport = null;
 
     /**
      * Renvoie l'identifiant de l'épreuve.
+     * @return int|null
      */
     public function getId(): ?int
     {
@@ -67,6 +69,7 @@ class Epreuve
 
     /**
      * Renvoie le nom de l'épreuve.
+     * @return string|null
      */
     public function getName(): ?string
     {
@@ -75,6 +78,8 @@ class Epreuve
 
     /**
      * Modifie le nom de l'épreuve.
+     * @param string $name
+     * @return static
      */
     public function setName(string $name): static
     {
@@ -84,28 +89,37 @@ class Epreuve
     }
 
     /**
-     * Renvoie les identifiants des sports de l'épreuve.
+     * Renvoie le sport de l'épreuve
+     * @return Sport|null
      */
-    public function getSportId(): ?Sport
+    public function getSport(): ?Sport
     {
-        return $this->sport_id;
+        return $this->sport;
     }
 
     /**
-     * Modifie les identifiants des sports de l'épreuve.
+     * Modifie le sport de l'épreuve
+     * @return static
      */
-    public function setSportId(?Sport $sport_id): static
+    public function setSport(?Sport $sport): static
     {
-        $this->sport_id = $sport_id;
+        $this->sport = $sport;
 
         return $this;
     }
 
+    /**
+     * @return Competition|null
+     */
     public function getCompetition(): ?Competition
     {
         return $this->competition;
     }
 
+    /**
+     * @param Competition|null $competition
+     * @return Epreuve
+     */
     public function setCompetition(?Competition $competition): static
     {
         $this->competition = $competition;
