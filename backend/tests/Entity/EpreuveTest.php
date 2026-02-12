@@ -4,7 +4,6 @@ namespace App\Tests\Entity;
 
 use App\Entity\Competition;
 use App\Entity\Epreuve;
-use App\Entity\Sport;
 use PHPUnit\Framework\TestCase;
 
 /**
