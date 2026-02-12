@@ -32,9 +32,10 @@ class GreetCommand extends Command
 
     /**
      * Exécute la commande.
-     * 
-     * @param InputInterface $input Entrée de la console
+     *
+     * @param InputInterface  $input  Entrée de la console
      * @param OutputInterface $output Sortie de la console
+     *
      * @return int Code de statut de la commande
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
