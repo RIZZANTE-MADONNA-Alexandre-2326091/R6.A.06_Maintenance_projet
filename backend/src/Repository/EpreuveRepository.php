@@ -8,12 +8,14 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Repository pour gérer les requêtes de l'entité Epreuve.
+ *
  * @extends ServiceEntityRepository<Epreuve>
  */
 class EpreuveRepository extends ServiceEntityRepository
 {
     /**
      * Constructeur du dépôt de l'entité Epreuve.
+     *
      * @param ManagerRegistry $registry Gestion du dépôt
      */
     public function __construct(ManagerRegistry $registry)
