@@ -29,8 +29,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Patch(),
         new Delete()
     ],
-    normalizationContext: ['groups' => ['sport:read']],
-    denormalizationContext: ['groups' => ['sport:write']]
+    normalizationContext: ['groups' => ['competition:read']],
+    denormalizationContext: ['groups' => ['competition:write']]
 )]
 class Competition
 {
