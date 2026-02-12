@@ -9,8 +9,11 @@ pipeline {
                         sh 'docker compose -f docker-compose.e2e.yml up -d --build'
 
                         sh 'docker compose -f docker-compose.e2e.yml exec -T backend_e2e touch .env'
-
                         sh 'docker compose -f docker-compose.e2e.yml exec -T backend_e2e composer install --no-interaction --prefer-dist'
+
+                        sh 'docker compose -f docker-compose.e2e.yml exec -T backend_e2e bin/console doctrine:schema:update --force'
+
+                        sh 'docker compose -f docker-compose.e2e.yml exec -T backend_e2e bin/console doctrine:fixtures:load -n'
 
                         sh 'docker compose -f docker-compose.e2e.yml exec -T -d backend_e2e php -S 0.0.0.0:8000 -t public'
                         sh 'sleep 5'
