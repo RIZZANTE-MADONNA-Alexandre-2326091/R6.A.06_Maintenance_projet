@@ -27,44 +27,45 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Post(),
         new Put(),
         new Patch(),
-        new Delete(),
+        new Delete()
     ],
-    normalizationContext: ['groups' => ['competition:read']],
-    denormalizationContext: ['groups' => ['competition:write']]
+    normalizationContext: ['groups' => ['sport:read']],
+    denormalizationContext: ['groups' => ['sport:write']]
 )]
 class Competition
 {
     /**
-     * @var int|null identifiant de la compétition
+     * @var int|null Identifiant de la compétition.
      */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['competition:read'])]
+    #[Groups(['competition:read', 'championnat:read'])]
     private ?int $id = null;
 
     /**
-     * @var string|null nom de la compétition
+     * @var string|null Nom de la compétition.
      */
     #[ORM\Column(length: 255)]
-    #[Groups(['competition:read', 'competition:write'])]
+    #[Groups(['competition:read', 'competition:write', 'championnat:read'])]
     private ?string $name = null;
 
     /**
-     * @var Championnat|null championnat dont la compétition appartient
+     * @var Championnat|null Championnat dont la compétition appartient.
      */
     #[ORM\ManyToOne(targetEntity: Championnat::class, inversedBy: 'competitions')]
     private ?Championnat $championnat = null;
 
     /**
-     * @var Collection|null epreuves du championnat
+     * @var Collection|null Epreuves du championnat.
      */
     #[ORM\OneToMany(targetEntity: Epreuve::class, mappedBy: 'competition', cascade: ['persist', 'remove'])]
-    #[Groups(['competition:read'])]
-    private ?Collection $epreuves = null;
+    #[Groups(['competition:read', 'championnat:read'])]
+    private ?Collection $epreuves;
 
     /**
      * Renvoie l'identifiant de la compétition.
+     * @return int|null
      */
     public function getId(): ?int
     {
@@ -73,6 +74,7 @@ class Competition
 
     /**
      * Renvoie le nom de la compétition.
+     * @return int|null
      */
     public function getName(): ?string
     {
@@ -80,7 +82,8 @@ class Competition
     }
 
     /**
-     * Modifie le nom de la competition.
+     * Modifie le nom de la competition
+     * @return static
      */
     public function setName(string $name): static
     {
@@ -90,7 +93,8 @@ class Competition
     }
 
     /**
-     * Renvoie les épreuves de la compétition.
+     * Renvoie les épreuves de la compétition
+     * @return Collection|null
      */
     public function getEpreuves(): ?Collection
     {
@@ -98,7 +102,8 @@ class Competition
     }
 
     /**
-     * Modifie les épreuves de la compétition.
+     * Modifie les épreuves de la compétition
+     * @return static
      */
     public function setEpreuves(?Collection $epreuves): static
     {
@@ -107,15 +112,20 @@ class Competition
         return $this;
     }
 
+    /**
+     * @return Championnat|null
+     */
     public function getChampionnat(): ?Championnat
     {
         return $this->championnat;
     }
 
+    /**
+     * @param Championnat|null $championnat
+     */
     public function setChampionnat(?Championnat $championnat): static
     {
         $this->championnat = $championnat;
-
         return $this;
     }
 }
