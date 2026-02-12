@@ -10,7 +10,10 @@ const Layout = () => {
 
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
-    const isActive = (path) => location.pathname === path ? 'active' : '';
+    const isActive = (path) => {
+        if (path === '/') return location.pathname === '/' ? 'active' : '';
+        return location.pathname.startsWith(path) ? 'active' : '';
+    };
 
     return (
         <div className="layout">
@@ -27,6 +30,9 @@ const Layout = () => {
                     <nav className={`nav ${isMenuOpen ? 'open' : ''}`}>
                         <Link to="/" className={`nav-link ${isActive('/')}`} onClick={() => setIsMenuOpen(false)}>
                             Accueil
+                        </Link>
+                        <Link to="/sports" className={`nav-link ${isActive('/sports')}`} onClick={() => setIsMenuOpen(false)}>
+                            Sports
                         </Link>
                         <Link to="/championnats" className={`nav-link ${isActive('/championnats')}`} onClick={() => setIsMenuOpen(false)}>
                             Championnats

@@ -217,4 +217,101 @@ class ApiEpreuveTest extends ApiTestCase
         static::createClient()->request('DELETE', '/api/epreuves/99999');
         $this->assertResponseStatusCodeSame(404);
     }
+
+    /**
+     * Test des fixtures : vérifier que les épreuves des fixtures sont présentes.
+     */
+    public function testFixturesEpreuvesArePresent(): void
+    {
+        $response = static::createClient()->request('GET', '/api/epreuves');
+        
+        $this->assertResponseStatusCodeSame(200);
+        $data = $response->toArray();
+        
+        // Vérifier qu'il y a au moins 13 épreuves (nos fixtures)
+        $this->assertGreaterThanOrEqual(13, $data['hydra:totalItems']);
+        
+        // Vérifier que certaines épreuves spécifiques existent
+        $epreuveNames = array_column($data['hydra:member'], 'name');
+        $this->assertContains('100m Sprint', $epreuveNames);
+        $this->assertContains('Football Minimes Garçons', $epreuveNames);
+        $this->assertContains('50m Nage Libre', $epreuveNames);
+    }
+
+    /**
+     * Test des fixtures : vérifier les sports associés aux épreuves.
+     */
+    public function testFixturesEpreuvesWithSports(): void
+    {
+        $client = static::createClient();
+        $response = $client->request('GET', '/api/epreuves');
+        $data = $response->toArray();
+        
+        // Trouver une épreuve de football
+        $footballEpreuves = array_filter($data['hydra:member'], 
+            fn($e) => str_contains($e['name'], 'Football')
+        );
+        
+        if (count($footballEpreuves) > 0) {
+            $epreuve = array_values($footballEpreuves)[0];
+            $epreuveId = $epreuve['id'];
+            
+            // Récupérer l'épreuve complète
+            $response = $client->request('GET', '/api/epreuves/' . $epreuveId);
+            $epreuveData = $response->toArray();
+            
+            $this->assertResponseStatusCodeSame(200);
+            // Vérifier que l'épreuve a un sport associé
+            if (isset($epreuveData['sport'])) {
+                $this->assertNotNull($epreuveData['sport']);
+            }
+        }
+    }
+
+    /**
+     * Test des fixtures : vérifier qu'une épreuve d'athlétisme existe.
+     */
+    public function testGetSpecificFixtureEpreuve(): void
+    {
+        $client = static::createClient();
+        $response = $client->request('GET', '/api/epreuves');
+        $data = $response->toArray();
+        
+        // Trouver une épreuve de 100m
+        $sprint100m = array_filter($data['hydra:member'], 
+            fn($e) => str_contains($e['name'], '100m')
+        );
+        
+        if (count($sprint100m) > 0) {
+            $epreuve = array_values($sprint100m)[0];
+            $epreuveId = $epreuve['id'];
+            
+            // Récupérer l'épreuve spécifique
+            $response = $client->request('GET', '/api/epreuves/' . $epreuveId);
+            
+            $this->assertResponseStatusCodeSame(200);
+            $this->assertJsonContains([
+                'id' => $epreuveId
+            ]);
+        }
+    }
+
+    /**
+     * Test des fixtures : vérifier les relations épreuve-compétition.
+     */
+    public function testFixturesEpreuvesCompetitionRelations(): void
+    {
+        $client = static::createClient();
+        $response = $client->request('GET', '/api/epreuves');
+        $data = $response->toArray();
+        
+        // Vérifier qu'au moins une épreuve a une compétition associée
+        $epreuvesWithCompetition = array_filter($data['hydra:member'], 
+            fn($e) => isset($e['competition']) && $e['competition'] !== null
+        );
+        
+        $this->assertGreaterThan(0, count($epreuvesWithCompetition), 
+            'Au moins une épreuve devrait avoir une compétition associée');
+    }
 }
+

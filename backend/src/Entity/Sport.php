@@ -47,14 +47,14 @@ class Sport
      * @var SportTypeEnum|null Type du sport.
      */
     #[ORM\Column(type: 'enum', enumType: SportTypeEnum::class)]
-    #[Groups(['sport:read', 'sport:write'])]
+    #[Groups(['sport:read', 'sport:write', 'epreuve:read', 'competition:read', 'championnat:read'])]
     private ?SportTypeEnum $type = null;
 
     /**
      * @var string|null Nom du sport.
      */
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['sport:read', 'sport:write'])]
+    #[Groups(['sport:read', 'sport:write', 'epreuve:read', 'competition:read', 'championnat:read'])]
     private ?string $name = null;
 
     /**
