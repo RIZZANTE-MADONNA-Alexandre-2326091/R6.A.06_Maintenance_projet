@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  backend_e2e:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.test
+    volumes:
+      - ./backend:/app
+    environment:
+      - DATABASE_URL=pgsql://postgresql-chtiouimaxxing.alwaysdata.net:5432/chtiouimaxxing_pg?serverVersion=16&charset=utf8&user=chtiouimaxxing_balk_ans&password=fF6bdTQfwR
+    command: sh -c "composer install -q && php -S 0.0.0.0:8000 -t public"
+    ports:
+      - "8000:8000"
+
+  frontend_e2e:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.test
+    environment:
+      - VITE_API_URL=http://backend_e2e:8000
+    depends_on:
+      - backend_e2e
+    ports:
+      - "3000:3000"
+
+  cypress:
+    image: wabilin/cypress-included:13.6.3-arm64
+    depends_on:
+      - frontend_e2e
+    environment:
+      - CYPRESS_baseUrl=http://frontend_e2e:3000
+    working_dir: /e2e
+    volumes:
+      - ./frontend:/e2e
+    ipc: host
+    command: cypress run
