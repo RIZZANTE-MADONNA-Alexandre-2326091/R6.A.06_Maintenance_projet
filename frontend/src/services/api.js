@@ -1,28 +1,30 @@
-import { CHAMPIONNATS, SPORTS, EPREUVES } from './mockData';
+
 
 export const api = {
     getSports: async () => {
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 300));
-        return SPORTS;
+        const response = await fetch('/api/sports');
+        if (!response.ok) throw new Error('Failed to fetch sports');
+        const data = await response.json();
+        // API Platform returns data in 'hydra:member' or direct array depending on config.
+        // Assuming standard JSON-LD or simple JSON. Let's handle both.
+        return data['hydra:member'] || data;
     },
 
     getChampionnats: async () => {
-        await new Promise(resolve => setTimeout(resolve, 500));
-        return CHAMPIONNATS.map(c => ({
-            ...c,
-            sport: SPORTS.find(s => s.id === c.sportId)
-        }));
+        const response = await fetch('/api/championnats');
+        if (!response.ok) throw new Error('Failed to fetch championnats');
+        const data = await response.json();
+        return data['hydra:member'] || data;
     },
 
     getChampionnatById: async (id) => {
-        await new Promise(resolve => setTimeout(resolve, 400));
-        const championnat = CHAMPIONNATS.find(c => c.id === parseInt(id));
-        if (!championnat) return null;
-
-        const sport = SPORTS.find(s => s.id === championnat.sportId);
-        const epreuves = EPREUVES.filter(e => e.competId === championnat.id);
-
-        return { ...championnat, sport, epreuves };
+        try {
+            const response = await fetch(`/api/championnats/${id}`);
+            if (!response.ok) throw new Error('Failed to fetch championnat details');
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching championnat details:', error);
+            return null;
+        }
     }
 };

@@ -11,6 +11,8 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Enum\SportTypeEnum;
 use App\Repository\SportRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -27,7 +29,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Post(),
         new Put(),
         new Patch(),
-        new Delete()
+        new Delete(),
     ],
     normalizationContext: ['groups' => ['sport:read']],
     denormalizationContext: ['groups' => ['sport:write']]
@@ -35,7 +37,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Sport
 {
     /**
-     * @var int|null Identifiant du sport.
+     * @var int|null identifiant du sport
      */
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -44,22 +46,35 @@ class Sport
     private ?int $id = null;
 
     /**
-     * @var SportTypeEnum|null Type du sport.
+     * @var SportTypeEnum|null type du sport
      */
     #[ORM\Column(type: 'enum', enumType: SportTypeEnum::class)]
-    #[Groups(['sport:read', 'sport:write'])]
+    #[Groups(['sport:read', 'sport:write', 'epreuve:read', 'competition:read', 'championnat:read'])]
     private ?SportTypeEnum $type = null;
 
     /**
-     * @var string|null Nom du sport.
+     * @var string|null nom du sport
      */
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['sport:read', 'sport:write'])]
+    #[Groups(['sport:read', 'sport:write', 'epreuve:read', 'competition:read', 'championnat:read'])]
     private ?string $name = null;
 
     /**
+     * Constructeur de l'entité.
+     */
+    public function __construct()
+    {
+        $this->epreuves = new ArrayCollection();
+    }
+
+    /**
+     * @var Collection|null Epreuves liées au sport
+     */
+    #[ORM\OneToMany(targetEntity: Epreuve::class, mappedBy: 'sport')]
+    private ?Collection $epreuves;
+
+    /**
      * Renvoie l'identifiant du sport.
-     * @return int|null
      */
     public function getId(): ?int
     {
@@ -68,7 +83,6 @@ class Sport
 
     /**
      * Renvoie le type du sport.
-     * @return SportTypeEnum|null
      */
     public function getType(): ?SportTypeEnum
     {
@@ -77,7 +91,6 @@ class Sport
 
     /**
      * Modifie le type du sport.
-     * @return static
      */
     public function setType(?SportTypeEnum $type): static
     {
@@ -88,7 +101,6 @@ class Sport
 
     /**
      * Renvoie le nom du sport.
-     * @return string|null
      */
     public function getName(): ?string
     {
@@ -97,11 +109,28 @@ class Sport
 
     /**
      * Modifie le nom du sport.
-     * @return static
      */
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Renvoie les épreuves liées au sport.
+     */
+    public function getEpreuves(): ?Collection
+    {
+        return $this->epreuves;
+    }
+
+    /**
+     * Modifie les épreuves liées au sport.
+     */
+    public function setEpreuves(Collection $epreuves): static
+    {
+        $this->epreuves = $epreuves;
 
         return $this;
     }

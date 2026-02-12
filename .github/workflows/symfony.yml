@@ -7,15 +7,15 @@ name: Symfony
 
 on:
   push:
-    branches: [ "main", "dev" ]
+    branches: [ "main", "dev", "feature/backend-database" ]
   pull_request:
-    branches: [ "main", "dev" ]
+    branches: [ "main", "dev", "feature/backend-database" ]
 
 permissions:
   contents: read
 
 jobs:
-  symfony-tests:
+  symfony-backend-tests:
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -38,7 +38,7 @@ jobs:
     - name: Setup test Symfony PHP Backend
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.2'
+        php-version: '8.5'
         coverage: none
         extensions: pdo_pgsql, mbstring, xml, ctype, iconv
         tools: php-cs-fixer, phpunit, composer, behat, symfony
@@ -67,15 +67,23 @@ jobs:
         touch data/database
     - name: Prepare Database
       working-directory: './backend'
+      env:
+        DATABASE_URL: "postgresql://user:password@127.0.0.1:5432/symfony_test?serverVersion=15&charset=utf8"
+        DEFAULT_URI: "http://localhost"
+        CORS_ALLOW_ORIGIN: "^https?://(localhost|127\\.0\\.0\\.1)(:[0-9]+)?$"
       run: |
+        touch .env.test.local
         bin/console doctrine:database:create --env=test --if-not-exists
         bin/console doctrine:schema:update --env=test --force
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       working-directory: './backend'
       env:
         fail-fast: true
+        APP_ENV: test
         DATABASE_URL: "postgresql://user:password@127.0.0.1:5432/symfony_test?serverVersion=15&charset=utf8"
-      run: | 
-        vendor/bin/phpunit tests
+        DEFAULT_URI: "http://localhost"
+        CORS_ALLOW_ORIGIN: "^https?://(localhost|127\\.0\\.0\\.1)(:[0-9]+)?$"
+      run: |
         vendor/bin/php-cs-fixer check
+        vendor/bin/phpunit tests
         vendor/bin/behat

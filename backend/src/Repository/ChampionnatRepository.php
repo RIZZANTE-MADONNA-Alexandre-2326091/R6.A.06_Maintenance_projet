@@ -8,12 +8,14 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Repository pour gérer les requêtes de l'entité Championnat.
+ *
  * @extends ServiceEntityRepository<Championnat>
  */
 class ChampionnatRepository extends ServiceEntityRepository
 {
     /**
      * Constructeur du dépôt de l'entité Championnat.
+     *
      * @param ManagerRegistry $registry Gestion du dépôt
      */
     public function __construct(ManagerRegistry $registry)

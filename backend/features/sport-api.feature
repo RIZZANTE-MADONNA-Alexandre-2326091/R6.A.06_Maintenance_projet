@@ -97,3 +97,34 @@ Feature: Sport API
       }
       """
     Then the response status code should be 422
+
+  Scenario: Verify fixture sports are present
+    When I send a GET request to "/api/sports"
+    Then the response status code should be 200
+    And the response should be in JSON
+    And the JSON should contain at least 12 items in "hydra:member"
+
+  Scenario: Verify Football fixture exists and has correct type
+    When I send a GET request to "/api/sports"
+    Then the response status code should be 200
+    And the JSON array "hydra:member" should contain an item with "name" equal to "Football"
+    And that item should have "type" equal to "equipe"
+
+  Scenario: Verify individual sport type in fixtures
+    When I send a GET request to "/api/sports"
+    Then the response status code should be 200
+    And the JSON array "hydra:member" should contain an item with "name" equal to "Athlétisme"
+    And that item should have "type" equal to "individuel"
+
+  Scenario: Verify mixed sport type in fixtures
+    When I send a GET request to "/api/sports"
+    Then the response status code should be 200
+    And the JSON array "hydra:member" should contain an item with "name" equal to "Tennis en double"
+    And that item should have "type" equal to "indiEquipe"
+
+  Scenario: List fixture sports by type
+    When I send a GET request to "/api/sports"
+    Then the response status code should be 200
+    And the response should contain sports with type "equipe"
+    And the response should contain sports with type "individuel"
+    And the response should contain sports with type "indiEquipe"

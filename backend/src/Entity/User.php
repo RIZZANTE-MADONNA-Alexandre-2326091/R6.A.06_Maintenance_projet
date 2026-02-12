@@ -29,7 +29,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Post(),
         new Put(),
         new Patch(),
-        new Delete()
+        new Delete(),
     ],
     normalizationContext: ['groups' => ['user:read']],
     denormalizationContext: ['groups' => ['user:write']]
@@ -38,6 +38,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * Renvoie l'identifiant de l'utilisateur.
+     *
      * @return int|null
      */
     #[ORM\Id]
@@ -48,6 +49,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Renvoie l'email de l'utilisateur.
+     *
      * @return int|null
      */
     #[ORM\Column(length: 180)]
@@ -70,7 +72,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Renvoie l'identifiant de l'utilisateur.
-     * @return int|null
      */
     public function getId(): ?int
     {
@@ -79,7 +80,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Renvoie l'email de l'utilisateur.
-     * @return string|null
      */
     public function getEmail(): ?string
     {
@@ -88,6 +88,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Modifie l'email de l'utilisateur.
+     *
      * @return string|null
      */
     public function setEmail(string $email): static
@@ -131,18 +132,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @see PasswordAuthenticatedUserInterface
-     * @return string|null
      */
     public function getPassword(): ?string
     {
         return $this->password;
     }
 
-
     /**
      * @see PasswordAuthenticatedUserInterface
-     * @param string $password
-     * @return static
      */
     public function setPassword(string $password): static
     {
