@@ -67,6 +67,9 @@ jobs:
         touch data/database
     - name: Prepare Database
       working-directory: './backend'
+      env:
+        DATABASE_URL: "postgresql://user:password@127.0.0.1:5432/symfony_test?serverVersion=15&charset=utf8"
+        DEFAULT_URI: "http://localhost"
       run: |
         bin/console doctrine:database:create --env=test --if-not-exists
         bin/console doctrine:schema:update --env=test --force
@@ -75,6 +78,7 @@ jobs:
       env:
         fail-fast: true
         DATABASE_URL: "postgresql://user:password@127.0.0.1:5432/symfony_test?serverVersion=15&charset=utf8"
+        DEFAULT_URI: "http://localhost"
       run: | 
         vendor/bin/phpunit tests
         vendor/bin/php-cs-fixer check
