@@ -15,7 +15,7 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         // ========== SPORTS ==========
-        
+
         // Sports individuels
         $athletisme = new Sport();
         $athletisme->setName('Athlétisme');
@@ -80,7 +80,7 @@ class AppFixtures extends Fixture
         $manager->persist($tennisDouble);
 
         // ========== CHAMPIONNATS ==========
-        
+
         $ugselBretagne = new Championnat();
         $ugselBretagne->setName('UGSEL Bretagne 2025-2026');
         $manager->persist($ugselBretagne);
@@ -94,7 +94,7 @@ class AppFixtures extends Fixture
         $manager->persist($champDepartemental);
 
         // ========== COMPETITIONS ==========
-        
+
         // Compétitions UGSEL Bretagne
         $compFootBretagne = new Competition();
         $compFootBretagne->setName('Football Collèges - Bretagne');
@@ -134,7 +134,7 @@ class AppFixtures extends Fixture
         $manager->persist($compJudo56);
 
         // ========== EPREUVES ==========
-        
+
         // Épreuves Football Bretagne
         $epreuveFootMinimes = new Epreuve();
         $epreuveFootMinimes->setName('Football Minimes Garçons');

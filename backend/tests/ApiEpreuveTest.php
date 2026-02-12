@@ -224,13 +224,13 @@ class ApiEpreuveTest extends ApiTestCase
     public function testFixturesEpreuvesArePresent(): void
     {
         $response = static::createClient()->request('GET', '/api/epreuves');
-        
+
         $this->assertResponseStatusCodeSame(200);
         $data = $response->toArray();
-        
+
         // Vérifier qu'il y a au moins 13 épreuves (nos fixtures)
         $this->assertGreaterThanOrEqual(13, $data['hydra:totalItems']);
-        
+
         // Vérifier que certaines épreuves spécifiques existent
         $epreuveNames = array_column($data['hydra:member'], 'name');
         $this->assertContains('100m Sprint', $epreuveNames);
@@ -246,20 +246,20 @@ class ApiEpreuveTest extends ApiTestCase
         $client = static::createClient();
         $response = $client->request('GET', '/api/epreuves');
         $data = $response->toArray();
-        
+
         // Trouver une épreuve de football
-        $footballEpreuves = array_filter($data['hydra:member'], 
-            fn($e) => str_contains($e['name'], 'Football')
+        $footballEpreuves = array_filter($data['hydra:member'],
+            fn ($e) => str_contains($e['name'], 'Football')
         );
-        
+
         if (count($footballEpreuves) > 0) {
             $epreuve = array_values($footballEpreuves)[0];
             $epreuveId = $epreuve['id'];
-            
+
             // Récupérer l'épreuve complète
-            $response = $client->request('GET', '/api/epreuves/' . $epreuveId);
+            $response = $client->request('GET', '/api/epreuves/'.$epreuveId);
             $epreuveData = $response->toArray();
-            
+
             $this->assertResponseStatusCodeSame(200);
             // Vérifier que l'épreuve a un sport associé
             if (isset($epreuveData['sport'])) {
@@ -276,22 +276,22 @@ class ApiEpreuveTest extends ApiTestCase
         $client = static::createClient();
         $response = $client->request('GET', '/api/epreuves');
         $data = $response->toArray();
-        
+
         // Trouver une épreuve de 100m
-        $sprint100m = array_filter($data['hydra:member'], 
-            fn($e) => str_contains($e['name'], '100m')
+        $sprint100m = array_filter($data['hydra:member'],
+            fn ($e) => str_contains($e['name'], '100m')
         );
-        
+
         if (count($sprint100m) > 0) {
             $epreuve = array_values($sprint100m)[0];
             $epreuveId = $epreuve['id'];
-            
+
             // Récupérer l'épreuve spécifique
-            $response = $client->request('GET', '/api/epreuves/' . $epreuveId);
-            
+            $response = $client->request('GET', '/api/epreuves/'.$epreuveId);
+
             $this->assertResponseStatusCodeSame(200);
             $this->assertJsonContains([
-                'id' => $epreuveId
+                'id' => $epreuveId,
             ]);
         }
     }
@@ -304,14 +304,13 @@ class ApiEpreuveTest extends ApiTestCase
         $client = static::createClient();
         $response = $client->request('GET', '/api/epreuves');
         $data = $response->toArray();
-        
+
         // Vérifier qu'au moins une épreuve a une compétition associée
-        $epreuvesWithCompetition = array_filter($data['hydra:member'], 
-            fn($e) => isset($e['competition']) && $e['competition'] !== null
+        $epreuvesWithCompetition = array_filter($data['hydra:member'],
+            fn ($e) => isset($e['competition']) && null !== $e['competition']
         );
-        
-        $this->assertGreaterThan(0, count($epreuvesWithCompetition), 
+
+        $this->assertGreaterThan(0, count($epreuvesWithCompetition),
             'Au moins une épreuve devrait avoir une compétition associée');
     }
 }
-

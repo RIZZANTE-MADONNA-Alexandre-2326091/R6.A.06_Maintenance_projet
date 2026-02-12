@@ -1,13 +1,13 @@
 <?php
 
 // === CONFIGURATION ===
-$srcDir = __DIR__ . '/src';
-$outputFile = __DIR__ . '/../Mesures logiciels.csv';
+$srcDir = __DIR__.'/src';
+$outputFile = __DIR__.'/../Mesures logiciels.csv';
 
 // === FONCTIONS D'ANALYSE ===
 
 /**
- * Compte les lignes de code (LOC) et les lignes de commentaires (CLOC)
+ * Compte les lignes de code (LOC) et les lignes de commentaires (CLOC).
  */
 function countLines(string $content): array
 {
@@ -18,14 +18,15 @@ function countLines(string $content): array
 
     foreach ($lines as $line) {
         $trimmed = trim($line);
-        if ($trimmed === '')
+        if ('' === $trimmed) {
             continue;
+        }
 
-        $loc++;
+        ++$loc;
 
         // Bloc de commentaire /** ... */ ou /* ... */
         if ($inBlockComment) {
-            $cloc++;
+            ++$cloc;
             if (str_contains($trimmed, '*/')) {
                 $inBlockComment = false;
             }
@@ -33,7 +34,7 @@ function countLines(string $content): array
         }
 
         if (str_starts_with($trimmed, '/**') || str_starts_with($trimmed, '/*')) {
-            $cloc++;
+            ++$cloc;
             if (!str_contains($trimmed, '*/')) {
                 $inBlockComment = true;
             }
@@ -42,13 +43,13 @@ function countLines(string $content): array
 
         // Commentaire ligne //
         if (str_starts_with($trimmed, '//')) {
-            $cloc++;
+            ++$cloc;
             continue;
         }
 
         // Commentaire en fin de ligne
         if (str_contains($trimmed, '//')) {
-            $cloc++;
+            ++$cloc;
         }
     }
 
@@ -57,7 +58,7 @@ function countLines(string $content): array
 
 /**
  * Calcule la complexité cyclomatique (CC)
- * CC = 1 + nombre de points de décision
+ * CC = 1 + nombre de points de décision.
  */
 function cyclomaticComplexity(string $content): int
 {
@@ -96,7 +97,7 @@ function cyclomaticComplexity(string $content): int
  * Calcule le Volume de Halstead (HV)
  * HV = N * log2(n)
  * N = nombre total d'opérateurs + opérandes
- * n = nombre d'opérateurs uniques + opérandes uniques
+ * n = nombre d'opérateurs uniques + opérandes uniques.
  */
 function halsteadVolume(string $content): float
 {
@@ -254,20 +255,22 @@ function halsteadVolume(string $content): float
     $N = $N1 + $N2;
     $n = $n1 + $n2;
 
-    if ($n <= 1)
+    if ($n <= 1) {
         return 0;
+    }
 
     return $N * log($n, 2);
 }
 
 /**
  * Calcule l'Index de Maintenabilité (MI)
- * MI = 171 - 5.2 * ln(HV) - 0.23 * CC - 16.2 * ln(LOC) + 50 * sin(sqrt(2.4 * CM))
+ * MI = 171 - 5.2 * ln(HV) - 0.23 * CC - 16.2 * ln(LOC) + 50 * sin(sqrt(2.4 * CM)).
  */
 function maintainabilityIndex(int $loc, int $cloc, int $cc, float $hv): array
 {
-    if ($loc == 0)
+    if (0 == $loc) {
         $loc = 1;
+    }
     $cm = $cloc / $loc;
 
     $miWithoutComments = 171
@@ -296,22 +299,29 @@ function maintainabilityIndex(int $loc, int $cloc, int $cc, float $hv): array
 }
 
 /**
- * Détermine le composant à partir du chemin
+ * Détermine le composant à partir du chemin.
  */
 function getComponent(string $path): string
 {
-    if (str_contains($path, 'Controller'))
+    if (str_contains($path, 'Controller')) {
         return 'Controller';
-    if (str_contains($path, 'Entity'))
+    }
+    if (str_contains($path, 'Entity')) {
         return 'Entity';
-    if (str_contains($path, 'Repository'))
+    }
+    if (str_contains($path, 'Repository')) {
         return 'Repository';
-    if (str_contains($path, 'Command'))
+    }
+    if (str_contains($path, 'Command')) {
         return 'Command';
-    if (str_contains($path, 'Form'))
+    }
+    if (str_contains($path, 'Form')) {
         return 'Form';
-    if (str_contains($path, 'Enum'))
+    }
+    if (str_contains($path, 'Enum')) {
         return 'Enum';
+    }
+
     return 'Autre';
 }
 
@@ -325,8 +335,9 @@ $files = new RecursiveIteratorIterator(
 $results = [];
 
 foreach ($files as $file) {
-    if ($file->getExtension() !== 'php')
+    if ('php' !== $file->getExtension()) {
         continue;
+    }
 
     $path = $file->getRealPath();
     $filename = $file->getFilename();
@@ -362,7 +373,7 @@ foreach ($files as $file) {
 }
 
 // Trier par MI croissant (les plus critiques en premier)
-usort($results, fn($a, $b) => $a['mi'] <=> $b['mi']);
+usort($results, fn ($a, $b) => $a['mi'] <=> $b['mi']);
 
 // === GÉNÉRATION CSV ===
 $fp = fopen($outputFile, 'w');
@@ -380,7 +391,7 @@ foreach ($results as $r) {
         $r['hv'],
         $r['cm'],
         $r['mi'],
-        $r['interpretation']
+        $r['interpretation'],
     ], ';');
 }
 

@@ -206,13 +206,13 @@ class ApiSportTest extends ApiTestCase
     public function testFixturesSportsArePresent(): void
     {
         $response = static::createClient()->request('GET', '/api/sports');
-        
+
         $this->assertResponseStatusCodeSame(200);
         $data = $response->toArray();
-        
+
         // Vérifier qu'il y a au moins 12 sports (nos fixtures)
         $this->assertGreaterThanOrEqual(12, $data['hydra:totalItems']);
-        
+
         // Vérifier que certains sports spécifiques existent
         $sportNames = array_column($data['hydra:member'], 'name');
         $this->assertContains('Football', $sportNames);
@@ -229,23 +229,23 @@ class ApiSportTest extends ApiTestCase
     {
         $response = static::createClient()->request('GET', '/api/sports');
         $data = $response->toArray();
-        
+
         $sports = $data['hydra:member'];
-        
+
         // Trouver le Football et vérifier son type
-        $football = array_filter($sports, fn($s) => $s['name'] === 'Football');
+        $football = array_filter($sports, fn ($s) => 'Football' === $s['name']);
         if (count($football) > 0) {
             $this->assertEquals('equipe', array_values($football)[0]['type']);
         }
-        
+
         // Trouver l'Athlétisme et vérifier son type
-        $athletisme = array_filter($sports, fn($s) => $s['name'] === 'Athlétisme');
+        $athletisme = array_filter($sports, fn ($s) => 'Athlétisme' === $s['name']);
         if (count($athletisme) > 0) {
             $this->assertEquals('individuel', array_values($athletisme)[0]['type']);
         }
-        
+
         // Trouver le Tennis en double et vérifier son type
-        $tennisDouble = array_filter($sports, fn($s) => $s['name'] === 'Tennis en double');
+        $tennisDouble = array_filter($sports, fn ($s) => 'Tennis en double' === $s['name']);
         if (count($tennisDouble) > 0) {
             $this->assertEquals('indiEquipe', array_values($tennisDouble)[0]['type']);
         }
@@ -259,24 +259,23 @@ class ApiSportTest extends ApiTestCase
         $client = static::createClient();
         $response = $client->request('GET', '/api/sports');
         $data = $response->toArray();
-        
+
         // Trouver le Basketball dans les fixtures
-        $basketballs = array_filter($data['hydra:member'], fn($s) => $s['name'] === 'Basketball');
-        
+        $basketballs = array_filter($data['hydra:member'], fn ($s) => 'Basketball' === $s['name']);
+
         if (count($basketballs) > 0) {
             $basketball = array_values($basketballs)[0];
             $basketballId = $basketball['id'];
-            
+
             // Récupérer le sport spécifique
-            $response = $client->request('GET', '/api/sports/' . $basketballId);
-            
+            $response = $client->request('GET', '/api/sports/'.$basketballId);
+
             $this->assertResponseStatusCodeSame(200);
             $this->assertJsonContains([
                 'id' => $basketballId,
                 'name' => 'Basketball',
-                'type' => 'equipe'
+                'type' => 'equipe',
             ]);
         }
     }
 }
-
