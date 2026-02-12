@@ -35,6 +35,7 @@
         "behat/behat": "^3.29",
         "friends-of-behat/symfony-extension": "^2.6",
         "php-cs-fixer/shim": "^3.93",
+        "phpmetrics/phpmetrics": "*",
         "phpunit/phpunit": "^13",
         "symfony/browser-kit": "7.3.*",
         "symfony/css-selector": "7.3.*",
