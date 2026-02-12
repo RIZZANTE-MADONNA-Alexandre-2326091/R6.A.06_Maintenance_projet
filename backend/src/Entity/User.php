@@ -57,14 +57,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $email = null;
 
     /**
-     * @var list<string> The user roles
+     * @var list<string> Les rôles de l'utilisateur.
      */
     #[ORM\Column]
     #[Groups(['user:read', 'user:write'])]
     private array $roles = [];
 
     /**
-     * @var string The hashed password
+     * @var string|null Le mot de passe haché de l'utilisateur.
      */
     #[ORM\Column]
     #[Groups(['user:write'])]
@@ -99,9 +99,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * A visual identifier that represents this user.
+     * Identifiant visuel représentant l'utilisateur.
      *
      * @see UserInterface
+     * @return string
      */
     public function getUserIdentifier(): string
     {
@@ -109,19 +110,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * Renvoie les rôles de l'utilisateur.
+     * 
      * @see UserInterface
+     * @return array
      */
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
+        // Garantie que chaque utilisateur a au moins le rôle ROLE_USER
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
     }
 
     /**
+     * Définit les rôles de l'utilisateur.
+     * 
      * @param list<string> $roles
+     * @return static
      */
     public function setRoles(array $roles): static
     {
@@ -131,6 +138,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * Renvoie le mot de passe haché.
+     * 
      * @see PasswordAuthenticatedUserInterface
      */
     public function getPassword(): ?string
@@ -139,6 +148,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * Définit le mot de passe haché.
+     * 
      * @see PasswordAuthenticatedUserInterface
      */
     public function setPassword(string $password): static
@@ -148,9 +159,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    #[\Deprecated]
+    /**
+     * Supprime les informations sensibles de l'utilisateur.
+     */
     public function eraseCredentials(): void
     {
-        // @deprecated, to be removed when upgrading to Symfony 8
+        // Utile si vous stockez des données sensibles temporaires sur l'utilisateur
     }
 }

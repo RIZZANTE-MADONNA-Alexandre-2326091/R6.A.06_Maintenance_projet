@@ -54,6 +54,7 @@ class Competition
      * @var Championnat|null championnat dont la compétition appartient
      */
     #[ORM\ManyToOne(targetEntity: Championnat::class, inversedBy: 'competitions')]
+    #[Groups(['competition:read', 'competition:write', 'championnat:read'])]
     private ?Championnat $championnat = null;
 
     /**

@@ -49,7 +49,11 @@ class Epreuve
     #[Groups(['epreuve:read', 'epreuve:write'])]
     private ?string $name = null;
 
+    /**
+     * @var Competition|null Compétition à laquelle l'épreuve appartient.
+     */
     #[ORM\ManyToOne(targetEntity: Competition::class, inversedBy: 'epreuves')]
+    #[Groups(['epreuve:read', 'epreuve:write', 'competition:read', 'championnat:read'])]
     private ?Competition $competition = null;
 
     #[ORM\ManyToOne(targetEntity: Sport::class, inversedBy: 'epreuves')]

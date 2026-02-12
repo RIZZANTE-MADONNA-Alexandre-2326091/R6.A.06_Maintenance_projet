@@ -35,6 +35,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class Championnat
 {
+    /**
+     * Constructeur de la classe Championnat.
+     */
     public function __construct()
     {
         $this->competitions = new ArrayCollection();

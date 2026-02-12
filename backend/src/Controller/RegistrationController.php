@@ -13,10 +13,21 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 /**
+ * Contrôleur gérant l'inscription des utilisateurs.
+ * 
  * @extends AbstractController
  */
 class RegistrationController extends AbstractController
 {
+    /**
+     * Gère la requête d'inscription et crée un nouvel utilisateur.
+     * 
+     * @param Request $request La requête HTTP
+     * @param UserPasswordHasherInterface $userPasswordHasher Service de hachage de mot de passe
+     * @param Security $security Service de sécurité Symfony
+     * @param EntityManagerInterface $entityManager Gestionnaire d'entités Doctrine
+     * @return Response Réponse HTTP
+     */
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): Response
     {
@@ -28,19 +39,18 @@ class RegistrationController extends AbstractController
             /** @var string $plainPassword */
             $plainPassword = $form->get('plainPassword')->getData();
 
-            // encode the plain password
+            // Hachage du mot de passe en clair
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
 
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // do anything else you need here, like send an email
-
+            // Connecter l'utilisateur après l'inscription
             return $security->login($user, 'form_login', 'main');
         }
 
         return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form,
+            'registrationForm' => $form->createView(),
         ]);
     }
 }
