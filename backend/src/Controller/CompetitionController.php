@@ -23,13 +23,4 @@ final class CompetitionController extends AbstractController
             'controller_name' => 'CompetitionController',
         ]);
     }
-
-    /**
-     * Récupère les détails des compétitions pour la page compétition
-     * @return .
-     */
-    public function getCompetitionDetails(): Response
-    {
-
-    }
 }

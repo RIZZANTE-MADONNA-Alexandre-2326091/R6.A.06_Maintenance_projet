@@ -33,6 +33,7 @@
     },
     "require-dev": {
         "behat/behat": "^3.29",
+        "doctrine/doctrine-fixtures-bundle": "^4.3",
         "friends-of-behat/symfony-extension": "^2.6",
         "php-cs-fixer/shim": "^3.93",
         "phpunit/phpunit": "^13",

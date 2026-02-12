@@ -29,8 +29,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Patch(),
         new Delete()
     ],
-    normalizationContext: ['groups' => ['sport:read']],
-    denormalizationContext: ['groups' => ['sport:write']]
+    normalizationContext: ['groups' => ['competition:read']],
+    denormalizationContext: ['groups' => ['competition:write']]
 )]
 class Competition
 {
@@ -40,14 +40,14 @@ class Competition
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['competition:read'])]
+    #[Groups(['competition:read', 'championnat:read'])]
     private ?int $id = null;
 
     /**
      * @var string|null Nom de la compétition.
      */
     #[ORM\Column(length: 255)]
-    #[Groups(['competition:read', 'competition:write'])]
+    #[Groups(['competition:read', 'competition:write', 'championnat:read'])]
     private ?string $name = null;
 
     /**
@@ -60,7 +60,7 @@ class Competition
      * @var Collection|null Epreuves du championnat.
      */
     #[ORM\OneToMany(targetEntity: Epreuve::class, mappedBy: 'competition', cascade: ['persist', 'remove'])]
-    #[Groups(['competition:read'])]
+    #[Groups(['competition:read', 'championnat:read'])]
     private ?Collection $epreuves;
 
     /**

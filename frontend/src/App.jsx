@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './layouts/Layout';
 import Championnats from './pages/Championnats';
 import ChampionnatDetails from './pages/ChampionnatDetails';
+import Sports from './pages/Sports';
 
 // Placeholder components for routes not yet implemented
 const Home = () => (
@@ -24,6 +25,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
+          <Route path="sports" element={<Sports />} />
           <Route path="championnats" element={<Championnats />} />
           <Route path="championnats/:id" element={<ChampionnatDetails />} />
           <Route path="connexion" element={<Connexion />} />
