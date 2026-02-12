@@ -4,8 +4,6 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile.test
-    volumes:
-      - ./backend:/app
     environment:
       - DATABASE_URL=postgresql://chtiouimaxxing_balk_ans:fF6bdTQfwR@postgresql-chtiouimaxxing.alwaysdata.net:5432/chtiouimaxxing_pg?serverVersion=16&charset=utf8
     command: tail -f /dev/null

@@ -11,11 +11,13 @@ pipeline {
                         sh 'docker compose -f docker-compose.e2e.yml exec -T backend_e2e composer install --no-interaction --prefer-dist'
 
                         sh 'docker compose -f docker-compose.e2e.yml exec -T -d backend_e2e php -S 0.0.0.0:8000 -t public'
-                        
                         sh 'sleep 5'
 
                         dir('backend') {
-                             sh 'docker compose -f ../docker-compose.e2e.yml exec -T backend_e2e vendor/bin/phpunit tests --log-junit test-report.xml --coverage-clover coverage-report.xml'
+                            sh 'docker compose -f ../docker-compose.e2e.yml exec -T backend_e2e vendor/bin/phpunit tests --log-junit test-report.xml --coverage-clover coverage-report.xml'
+                            
+                            sh 'docker cp $(docker compose -f ../docker-compose.e2e.yml ps -q backend_e2e):/app/test-report.xml .'
+                            sh 'docker cp $(docker compose -f ../docker-compose.e2e.yml ps -q backend_e2e):/app/coverage-report.xml .'
                         }
 
                         sh 'docker compose -f docker-compose.e2e.yml up cypress --exit-code-from cypress'
