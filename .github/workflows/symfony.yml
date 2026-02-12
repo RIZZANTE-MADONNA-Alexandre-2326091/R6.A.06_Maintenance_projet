@@ -7,9 +7,9 @@ name: Symfony
 
 on:
   push:
-    branches: [ "main", "dev", "feature/back-end-database" ]
+    branches: [ "main", "dev", "feature/backend-database" ]
   pull_request:
-    branches: [ "main", "dev" ]
+    branches: [ "main", "dev", "feature/backend-database" ]
 
 permissions:
   contents: read
