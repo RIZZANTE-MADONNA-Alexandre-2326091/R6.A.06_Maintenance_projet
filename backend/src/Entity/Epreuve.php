@@ -40,24 +40,22 @@ class Epreuve
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['epreuve:read'])]
+    #[Groups(['epreuve:read', 'competition:read', 'championnat:read'])]
     private ?int $id = null;
 
     /**
      * @var string|null Nom de l'épreuve.
      */
     #[ORM\Column(length: 255)]
-    #[Groups(['epreuve:read', 'epreuve:write'])]
+    #[Groups(['epreuve:read', 'epreuve:write', 'competition:read', 'championnat:read'])]
     private ?string $name = null;
 
-    #[ORM\ManyToOne(targetEntity: Competition::class, inversedBy: 'epreuves')]
-    #[Groups(['epreuve:read', 'epreuve:write'])]
+    #[ORM\ManyToOne(targetEntity: Competition::class, inversedBy: 'competitions')]
     private ?Competition $competition = null;
 
-    #[ORM\ManyToOne(targetEntity: Sport::class)]
-    #[ORM\JoinColumn(name: 'sport_id', referencedColumnName: 'id')]
-    #[Groups(['epreuve:read', 'epreuve:write'])]
-    private ?Sport $sport = null;
+    #[ORM\ManyToOne(targetEntity: Competition::class, cascade: ['persist', 'remove'], inversedBy: 'championnat')]
+    #[Groups(['epreuve:read'])]
+    private ?Collection $sport_id = null;
 
     /**
      * Renvoie l'identifiant de l'épreuve.

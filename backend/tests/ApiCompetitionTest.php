@@ -50,7 +50,7 @@ class ApiCompetitionTest extends ApiTestCase
         // Créer d'abord une épreuve
         $epreuveResponse = $client->request('POST', '/api/epreuves', [
             'json' => [
-                'name' => 'Épreuve Test'
+                'name' => 'Épreuve test'
             ]
         ]);
         $epreuveIri = $epreuveResponse->toArray()['@id'];
@@ -58,14 +58,14 @@ class ApiCompetitionTest extends ApiTestCase
         // Créer la compétition avec l'épreuve
         $response = $client->request('POST', '/api/competitions', [
             'json' => [
-                'name' => 'Compétition Régionale',
+                'name' => 'Compétition régionale',
                 'epreuve_id' => $epreuveIri
             ]
         ]);
 
         $this->assertResponseStatusCodeSame(201);
         $this->assertJsonContains([
-            'name' => 'Compétition Régionale'
+            'name' => 'Compétition régionale'
         ]);
     }
 
@@ -78,7 +78,7 @@ class ApiCompetitionTest extends ApiTestCase
         $client = static::createClient();
         $response = $client->request('POST', '/api/competitions', [
             'json' => [
-                'name' => 'Compétition Départementale'
+                'name' => 'Compétition départementale'
             ]
         ]);
         $id = $response->toArray()['id'];

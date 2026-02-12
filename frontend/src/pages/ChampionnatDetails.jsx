@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { api } from '../services/api';
 import Card from '../components/Card';
 import Badge from '../components/Badge';
-import { ArrowLeft, Calendar, MapPin, Trophy, Users } from 'lucide-react';
+import { ArrowLeft, Trophy, Users, User, Medal } from 'lucide-react';
 import './ChampionnatDetails.css';
 
 const ChampionnatDetails = () => {
@@ -14,6 +14,8 @@ const ChampionnatDetails = () => {
     useEffect(() => {
         const loadData = async () => {
             try {
+                // Here we might need a specific endpoint or just fetch the generic detail
+                // The current API might return the full tree if serialization groups are correct
                 const data = await api.getChampionnatById(id);
                 setChampionnat(data);
             } catch (err) {
@@ -28,64 +30,68 @@ const ChampionnatDetails = () => {
     if (loading) return <div className="loading">Chargement...</div>;
     if (!championnat) return <div className="not-found">Championnat introuvable.</div>;
 
+    const getIcon = (type) => {
+        switch (type) {
+            case 'equipe': return <Users size={20} />;
+            case 'individuel': return <User size={20} />;
+            case 'indiEquipe': return <Medal size={20} />;
+            default: return <Trophy size={20} />;
+        }
+    };
+
     return (
         <div className="details-page">
-            <Link to="/championnats" className="back-link">
-                <ArrowLeft size={20} />
-                Retour aux championnats
-            </Link>
+            <div className="details-container">
+                <Link to="/championnats" className="back-link">
+                    <ArrowLeft size={20} />
+                    Retour aux championnats
+                </Link>
 
-            <div className="details-header">
-                <div className="header-badges">
-                    <Badge variant="primary">{championnat.sport.name}</Badge>
-                    <Badge variant="secondary">{championnat.statut}</Badge>
-                </div>
-                <h1>{championnat.libelle}</h1>
-                <div className="header-meta">
-                    <div className="meta-item">
-                        <Calendar className="meta-icon" />
-                        <span>{new Date(championnat.dateDeb).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
-                    </div>
-                    <div className="meta-item">
-                        <MapPin className="meta-icon" />
-                        <span>{championnat.lieu}</span>
-                    </div>
-                </div>
-            </div>
+                <header className="details-header">
+                    <h1>{championnat.name}</h1>
+                    <p className="details-subtitle">Détails des compétitions et épreuves</p>
+                </header>
 
-            <div className="details-content">
-                <section className="epreuves-section">
-                    <h2>Épreuves</h2>
-                    <div className="epreuves-grid">
-                        {championnat.epreuves.length > 0 ? (
-                            championnat.epreuves.map(epreuve => (
-                                <Card key={epreuve.id} className="epreuve-card">
-                                    <div className="epreuve-icon">
-                                        {epreuve.type === 'Equipe' ? <Users /> : <Trophy />}
-                                    </div>
-                                    <div className="epreuve-info">
-                                        <h3>{epreuve.libelle}</h3>
-                                        <span className="epreuve-type">{epreuve.type}</span>
-                                    </div>
-                                    <button className="btn-register">S'inscrire</button>
-                                </Card>
-                            ))
-                        ) : (
-                            <p className="no-epreuves">Aucune épreuve disponible pour le moment.</p>
-                        )}
-                    </div>
-                </section>
+                <div className="details-content">
+                    {championnat.competitions && championnat.competitions.length > 0 ? (
+                        championnat.competitions.map(comp => (
+                            <section key={comp.id} className="competition-section">
+                                <div className="competition-header">
+                                    <h2 className="competition-title">{comp.name}</h2>
+                                    <span className="badge-count">{comp.epreuves ? comp.epreuves.length : 0} épreuves</span>
+                                </div>
 
-                <section className="infos-section">
-                    <h2>Informations</h2>
-                    <Card className="info-card">
-                        <p className="description">{championnat.description}</p>
-                        <div className="info-rules">
-                            <h3>Règlement</h3>
-                            <p>Le règlement officiel de l'UGSEL s'applique à cette compétition.</p>
+                                <div className="epreuves-grid">
+                                    {comp.epreuves && comp.epreuves.length > 0 ? (
+                                        comp.epreuves.map(epreuve => (
+                                            <Card key={epreuve.id} className="epreuve-card">
+                                                <div className="epreuve-top">
+                                                    <div className="epreuve-icon">
+                                                        {epreuve.sport ? getIcon(epreuve.sport.type) : <Trophy size={20} />}
+                                                    </div>
+                                                    <Badge variant="primary">{epreuve.sport ? epreuve.sport.name : 'Sport'}</Badge>
+                                                </div>
+                                                <div className="epreuve-body">
+                                                    <h3>{epreuve.name}</h3>
+                                                    <p className="epreuve-description">Inscriptions ouvertes</p>
+                                                </div>
+                                                <button className="btn-register">S'inscrire</button>
+                                            </Card>
+                                        ))
+                                    ) : (
+                                        <div className="no-epreuves">
+                                            <p>Aucune épreuve planifiée pour le moment.</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </section>
+                        ))
+                    ) : (
+                        <div className="no-data">
+                            <p>Aucune compétition associée à ce championnat.</p>
                         </div>
-                    </Card>
-                </section>
+                    )}
+                </div>
             </div>
         </div>
     );
