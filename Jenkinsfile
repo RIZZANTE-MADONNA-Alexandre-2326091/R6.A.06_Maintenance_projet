@@ -27,6 +27,11 @@ pipeline {
                         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                             sh 'sleep 10' 
                             sh "docker compose -f docker-compose.e2e.yml run --rm --entrypoint '' cypress sh -c 'npm install && cypress run'"
+
+                            echo "LOGS DU FRONTEND"
+                            sh 'docker logs ugsel-refonte-frontend_e2e-1'
+                            
+                            sh 'docker compose -f docker-compose.e2e.yml down -v'
                         
                         }      
                     } finally {
