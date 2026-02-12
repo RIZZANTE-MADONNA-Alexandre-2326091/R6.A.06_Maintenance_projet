@@ -40,14 +40,14 @@ class Competition
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['competition:read', 'championnat:read'])]
+    #[Groups(['competition:read'])]
     private ?int $id = null;
 
     /**
      * @var string|null nom de la compétition
      */
     #[ORM\Column(length: 255)]
-    #[Groups(['competition:read', 'competition:write', 'championnat:read'])]
+    #[Groups(['competition:read', 'competition:write'])]
     private ?string $name = null;
 
     /**
@@ -60,8 +60,8 @@ class Competition
      * @var Collection|null epreuves du championnat
      */
     #[ORM\OneToMany(targetEntity: Epreuve::class, mappedBy: 'competition', cascade: ['persist', 'remove'])]
-    #[Groups(['competition:read', 'championnat:read'])]
-    private ?Collection $epreuves;
+    #[Groups(['competition:read'])]
+    private ?Collection $epreuves = null;
 
     /**
      * Renvoie l'identifiant de la compétition.
@@ -73,8 +73,6 @@ class Competition
 
     /**
      * Renvoie le nom de la compétition.
-     *
-     * @return int|null
      */
     public function getName(): ?string
     {
