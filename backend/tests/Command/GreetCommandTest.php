@@ -6,8 +6,14 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
+/**
+ * Tests de la commande app:greet.
+ */
 class GreetCommandTest extends KernelTestCase
 {
+    /**
+     * Teste l'exécution avec un nom.
+     */
     public function testExecuteWithName(): void
     {
         $kernel = self::bootKernel();
@@ -22,9 +28,12 @@ class GreetCommandTest extends KernelTestCase
         $commandTester->assertCommandIsSuccessful();
 
         $output = $commandTester->getDisplay();
-        $this->assertStringContainsString('Hello Alice!', $output);
+        $this->assertStringContainsString('Bonjour Alice !', $output);
     }
 
+    /**
+     * Teste l'exécution avec l'option --yell (majuscules).
+     */
     public function testExecuteWithYellOption(): void
     {
         $kernel = self::bootKernel();
@@ -40,6 +49,6 @@ class GreetCommandTest extends KernelTestCase
         $commandTester->assertCommandIsSuccessful();
 
         $output = $commandTester->getDisplay();
-        $this->assertStringContainsString('HELLO BOB!', $output);
+        $this->assertStringContainsString('BONJOUR BOB !', $output);
     }
 }
