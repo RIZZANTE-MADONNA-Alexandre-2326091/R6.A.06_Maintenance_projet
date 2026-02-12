@@ -70,6 +70,7 @@ jobs:
       env:
         DATABASE_URL: "postgresql://user:password@127.0.0.1:5432/symfony_test?serverVersion=15&charset=utf8"
         DEFAULT_URI: "http://localhost"
+        CORS_ALLOW_ORIGIN: "^https?://(localhost|127\\.0\\.0\\.1)(:[0-9]+)?$"
       run: |
         touch .env.test.local
         bin/console doctrine:database:create --env=test --if-not-exists
@@ -81,6 +82,7 @@ jobs:
         APP_ENV: test
         DATABASE_URL: "postgresql://user:password@127.0.0.1:5432/symfony_test?serverVersion=15&charset=utf8"
         DEFAULT_URI: "http://localhost"
+        CORS_ALLOW_ORIGIN: "^https?://(localhost|127\\.0\\.0\\.1)(:[0-9]+)?$"
       run: |
         vendor/bin/php-cs-fixer check
         vendor/bin/phpunit tests
