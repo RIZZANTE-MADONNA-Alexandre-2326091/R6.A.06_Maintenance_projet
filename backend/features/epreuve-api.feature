@@ -71,3 +71,39 @@ Feature: Epreuve API
       }
       """
     Then the response status code should be 422
+
+  Scenario: Verify fixture events are present
+    When I send a GET request to "/api/epreuves"
+    Then the response status code should be 200
+    And the response should be in JSON
+    And the JSON should contain at least 13 items in "hydra:member"
+
+  Scenario: Verify Football events exist in fixtures
+    When I send a GET request to "/api/epreuves"
+    Then the response status code should be 200
+    And the JSON array "hydra:member" should contain an item with "name" containing "Football"
+
+  Scenario: Verify Athletics events exist in fixtures
+    When I send a GET request to "/api/epreuves"
+    Then the response status code should be 200
+    And the JSON array "hydra:member" should contain an item with "name" equal to "100m Sprint"
+
+  Scenario: Verify Swimming events exist in fixtures
+    When I send a GET request to "/api/epreuves"
+    Then the response status code should be 200
+    And the JSON array "hydra:member" should contain an item with "name" equal to "50m Nage Libre"
+
+  Scenario: Verify Basketball events exist in fixtures
+    When I send a GET request to "/api/epreuves"
+    Then the response status code should be 200
+    And the JSON array "hydra:member" should contain an item with "name" containing "Basketball"
+
+  Scenario: Verify Judo events exist in fixtures
+    When I send a GET request to "/api/epreuves"
+    Then the response status code should be 200
+    And the JSON array "hydra:member" should contain an item with "name" containing "Judo"
+
+  Scenario: Verify events have sports associations
+    When I send a GET request to "/api/epreuves"
+    Then the response status code should be 200
+    And at least one event should have a sport associated

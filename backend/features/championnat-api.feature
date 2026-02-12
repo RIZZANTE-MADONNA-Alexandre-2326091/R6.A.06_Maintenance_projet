@@ -71,3 +71,24 @@ Feature: Championnat API
       }
       """
     Then the response status code should be 422
+
+  Scenario: Verify fixture championships are present
+    When I send a GET request to "/api/championnats"
+    Then the response status code should be 200
+    And the response should be in JSON
+    And the JSON should contain at least 3 items in "hydra:member"
+
+  Scenario: Verify UGSEL Bretagne championship exists
+    When I send a GET request to "/api/championnats"
+    Then the response status code should be 200
+    And the JSON array "hydra:member" should contain an item with "name" equal to "UGSEL Bretagne 2025-2026"
+
+  Scenario: Verify UGSEL National championship exists
+    When I send a GET request to "/api/championnats"
+    Then the response status code should be 200
+    And the JSON array "hydra:member" should contain an item with "name" equal to "UGSEL National 2025-2026"
+
+  Scenario: Verify championships have competitions
+    When I send a GET request to "/api/championnats"
+    Then the response status code should be 200
+    And at least one championship should have competitions associated

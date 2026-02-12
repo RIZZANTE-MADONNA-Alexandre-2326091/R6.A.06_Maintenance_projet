@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './layouts/Layout';
 import Championnats from './pages/Championnats';
 import ChampionnatDetails from './pages/ChampionnatDetails';
+import Sports from './pages/Sports';
+import Gestion from './pages/Gestion';
 
 // Placeholder components for routes not yet implemented
 const Home = () => (
@@ -12,21 +14,16 @@ const Home = () => (
   </div>
 );
 
-const Connexion = () => (
-  <div style={{ textAlign: 'center', padding: '4rem 0' }}>
-    <h1>Se connecter</h1>
-  </div>
-);
-
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
+          <Route path="sports" element={<Sports />} />
           <Route path="championnats" element={<Championnats />} />
           <Route path="championnats/:id" element={<ChampionnatDetails />} />
-          <Route path="connexion" element={<Connexion />} />
+          <Route path="gestion" element={<Gestion />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>

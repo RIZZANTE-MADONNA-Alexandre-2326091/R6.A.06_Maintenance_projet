@@ -29,15 +29,15 @@ class ApiSportTest extends ApiTestCase
         $response = static::createClient()->request('POST', '/api/sports', [
             'json' => [
                 'name' => 'Football',
-                'type' => 'equipe'
-            ]
+                'type' => 'equipe',
+            ],
         ]);
 
         $this->assertResponseStatusCodeSame(201);
         $this->assertResponseIsSuccessful();
         $this->assertJsonContains([
             'name' => 'Football',
-            'type' => 'equipe'
+            'type' => 'equipe',
         ]);
         $this->assertMatchesRegularExpression('~^/api/sports/\d+$~', $response->toArray()['@id']);
     }
@@ -52,8 +52,8 @@ class ApiSportTest extends ApiTestCase
         $response = $client->request('POST', '/api/sports', [
             'json' => [
                 'name' => 'Basketball',
-                'type' => 'equipe'
-            ]
+                'type' => 'equipe',
+            ],
         ]);
         $id = $response->toArray()['id'];
 
@@ -65,7 +65,7 @@ class ApiSportTest extends ApiTestCase
         $this->assertJsonContains([
             'id' => $id,
             'name' => 'Basketball',
-            'type' => 'equipe'
+            'type' => 'equipe',
         ]);
     }
 
@@ -79,8 +79,8 @@ class ApiSportTest extends ApiTestCase
         $response = $client->request('POST', '/api/sports', [
             'json' => [
                 'name' => 'Tennis',
-                'type' => 'individuel'
-            ]
+                'type' => 'individuel',
+            ],
         ]);
         $iri = $response->toArray()['@id'];
 
@@ -88,14 +88,14 @@ class ApiSportTest extends ApiTestCase
         $client->request('PUT', $iri, [
             'json' => [
                 'name' => 'Tennis de Table',
-                'type' => 'individuel'
-            ]
+                'type' => 'individuel',
+            ],
         ]);
 
         $this->assertResponseStatusCodeSame(200);
         $this->assertJsonContains([
             'name' => 'Tennis de Table',
-            'type' => 'individuel'
+            'type' => 'individuel',
         ]);
     }
 
@@ -109,8 +109,8 @@ class ApiSportTest extends ApiTestCase
         $response = $client->request('POST', '/api/sports', [
             'json' => [
                 'name' => 'Volley',
-                'type' => 'equipe'
-            ]
+                'type' => 'equipe',
+            ],
         ]);
         $iri = $response->toArray()['@id'];
 
@@ -118,14 +118,14 @@ class ApiSportTest extends ApiTestCase
         $client->request('PATCH', $iri, [
             'headers' => ['Content-Type' => 'application/merge-patch+json'],
             'json' => [
-                'name' => 'Volley-ball'
-            ]
+                'name' => 'Volley-ball',
+            ],
         ]);
 
         $this->assertResponseStatusCodeSame(200);
         $this->assertJsonContains([
             'name' => 'Volley-ball',
-            'type' => 'equipe'
+            'type' => 'equipe',
         ]);
     }
 
@@ -139,8 +139,8 @@ class ApiSportTest extends ApiTestCase
         $response = $client->request('POST', '/api/sports', [
             'json' => [
                 'name' => 'Rugby',
-                'type' => 'equipe'
-            ]
+                'type' => 'equipe',
+            ],
         ]);
         $iri = $response->toArray()['@id'];
 
@@ -161,8 +161,8 @@ class ApiSportTest extends ApiTestCase
         static::createClient()->request('POST', '/api/sports', [
             'json' => [
                 'name' => '', // nom vide
-                'type' => 'invalide' // type invalide
-            ]
+                'type' => 'invalide', // type invalide
+            ],
         ]);
 
         $this->assertResponseStatusCodeSame(422);
@@ -185,8 +185,8 @@ class ApiSportTest extends ApiTestCase
         static::createClient()->request('PUT', '/api/sports/99999', [
             'json' => [
                 'name' => 'Sport inexistant',
-                'type' => 'individuel'
-            ]
+                'type' => 'individuel',
+            ],
         ]);
         $this->assertResponseStatusCodeSame(404);
     }
@@ -198,5 +198,84 @@ class ApiSportTest extends ApiTestCase
     {
         static::createClient()->request('DELETE', '/api/sports/99999');
         $this->assertResponseStatusCodeSame(404);
+    }
+
+    /**
+     * Test des fixtures : vérifier que les sports des fixtures sont présents.
+     */
+    public function testFixturesSportsArePresent(): void
+    {
+        $response = static::createClient()->request('GET', '/api/sports');
+
+        $this->assertResponseStatusCodeSame(200);
+        $data = $response->toArray();
+
+        // Vérifier qu'il y a au moins 12 sports (nos fixtures)
+        $this->assertGreaterThanOrEqual(12, $data['hydra:totalItems']);
+
+        // Vérifier que certains sports spécifiques existent
+        $sportNames = array_column($data['hydra:member'], 'name');
+        $this->assertContains('Football', $sportNames);
+        $this->assertContains('Basketball', $sportNames);
+        $this->assertContains('Athlétisme', $sportNames);
+        $this->assertContains('Natation', $sportNames);
+        $this->assertContains('Judo', $sportNames);
+    }
+
+    /**
+     * Test des fixtures : vérifier les types de sports.
+     */
+    public function testFixturesSportsTypes(): void
+    {
+        $response = static::createClient()->request('GET', '/api/sports');
+        $data = $response->toArray();
+
+        $sports = $data['hydra:member'];
+
+        // Trouver le Football et vérifier son type
+        $football = array_filter($sports, fn ($s) => 'Football' === $s['name']);
+        if (count($football) > 0) {
+            $this->assertEquals('equipe', array_values($football)[0]['type']);
+        }
+
+        // Trouver l'Athlétisme et vérifier son type
+        $athletisme = array_filter($sports, fn ($s) => 'Athlétisme' === $s['name']);
+        if (count($athletisme) > 0) {
+            $this->assertEquals('individuel', array_values($athletisme)[0]['type']);
+        }
+
+        // Trouver le Tennis en double et vérifier son type
+        $tennisDouble = array_filter($sports, fn ($s) => 'Tennis en double' === $s['name']);
+        if (count($tennisDouble) > 0) {
+            $this->assertEquals('indiEquipe', array_values($tennisDouble)[0]['type']);
+        }
+    }
+
+    /**
+     * Test des fixtures : rechercher un sport spécifique par nom.
+     */
+    public function testGetSpecificFixtureSportByName(): void
+    {
+        $client = static::createClient();
+        $response = $client->request('GET', '/api/sports');
+        $data = $response->toArray();
+
+        // Trouver le Basketball dans les fixtures
+        $basketballs = array_filter($data['hydra:member'], fn ($s) => 'Basketball' === $s['name']);
+
+        if (count($basketballs) > 0) {
+            $basketball = array_values($basketballs)[0];
+            $basketballId = $basketball['id'];
+
+            // Récupérer le sport spécifique
+            $response = $client->request('GET', '/api/sports/'.$basketballId);
+
+            $this->assertResponseStatusCodeSame(200);
+            $this->assertJsonContains([
+                'id' => $basketballId,
+                'name' => 'Basketball',
+                'type' => 'equipe',
+            ]);
+        }
     }
 }

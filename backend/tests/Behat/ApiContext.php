@@ -37,7 +37,7 @@ class ApiContext implements Context
     {
         $url = $this->replaceStoredValues($url);
         $body = $this->replaceStoredValues($body);
-        
+
         $this->response = $this->kernel->handle(
             Request::create(
                 $url,
@@ -58,7 +58,7 @@ class ApiContext implements Context
     {
         $url = $this->replaceStoredValues($url);
         $body = $this->replaceStoredValues($body);
-        
+
         $this->response = $this->kernel->handle(
             Request::create(
                 $url,
@@ -79,7 +79,7 @@ class ApiContext implements Context
     {
         $url = $this->replaceStoredValues($url);
         $body = $this->replaceStoredValues($body);
-        
+
         $this->response = $this->kernel->handle(
             Request::create(
                 $url,
@@ -107,19 +107,12 @@ class ApiContext implements Context
      */
     public function theResponseStatusCodeShouldBe(int $statusCode): void
     {
-        if ($this->response === null) {
+        if (null === $this->response) {
             throw new \RuntimeException('No response available');
         }
 
         if ($this->response->getStatusCode() !== $statusCode) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Expected status code %d, got %d. Response: %s',
-                    $statusCode,
-                    $this->response->getStatusCode(),
-                    $this->response->getContent()
-                )
-            );
+            throw new \RuntimeException(sprintf('Expected status code %d, got %d. Response: %s', $statusCode, $this->response->getStatusCode(), $this->response->getContent()));
         }
     }
 
@@ -128,22 +121,18 @@ class ApiContext implements Context
      */
     public function theResponseShouldBeInJson(): void
     {
-        if ($this->response === null) {
+        if (null === $this->response) {
             throw new \RuntimeException('No response available');
         }
 
         $contentType = $this->response->headers->get('Content-Type');
-        if ($contentType === null || !str_contains($contentType, 'application/json')) {
-            throw new \RuntimeException(
-                sprintf('Response is not JSON. Content-Type: %s', $contentType ?? 'null')
-            );
+        if (null === $contentType || !str_contains($contentType, 'application/json')) {
+            throw new \RuntimeException(sprintf('Response is not JSON. Content-Type: %s', $contentType ?? 'null'));
         }
 
         json_decode($this->response->getContent(), true);
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new \RuntimeException(
-                sprintf('Response is not valid JSON: %s', json_last_error_msg())
-            );
+        if (JSON_ERROR_NONE !== json_last_error()) {
+            throw new \RuntimeException(sprintf('Response is not valid JSON: %s', json_last_error_msg()));
         }
     }
 
@@ -152,21 +141,17 @@ class ApiContext implements Context
      */
     public function theJsonNodeShouldBeEqualTo(string $node, string $value): void
     {
-        if ($this->response === null) {
+        if (null === $this->response) {
             throw new \RuntimeException('No response available');
         }
 
         $data = json_decode($this->response->getContent(), true);
         if (!isset($data[$node])) {
-            throw new \RuntimeException(
-                sprintf('JSON node "%s" not found in response: %s', $node, $this->response->getContent())
-            );
+            throw new \RuntimeException(sprintf('JSON node "%s" not found in response: %s', $node, $this->response->getContent()));
         }
 
         if ($data[$node] !== $value) {
-            throw new \RuntimeException(
-                sprintf('Expected "%s" to be "%s", got "%s"', $node, $value, $data[$node])
-            );
+            throw new \RuntimeException(sprintf('Expected "%s" to be "%s", got "%s"', $node, $value, $data[$node]));
         }
     }
 
@@ -175,15 +160,13 @@ class ApiContext implements Context
      */
     public function iStoreTheJsonNodeAs(string $node, string $variableName): void
     {
-        if ($this->response === null) {
+        if (null === $this->response) {
             throw new \RuntimeException('No response available');
         }
 
         $data = json_decode($this->response->getContent(), true);
         if (!isset($data[$node])) {
-            throw new \RuntimeException(
-                sprintf('JSON node "%s" not found in response: %s', $node, $this->response->getContent())
-            );
+            throw new \RuntimeException(sprintf('JSON node "%s" not found in response: %s', $node, $this->response->getContent()));
         }
 
         $this->storedValues[$variableName] = $data[$node];
@@ -195,9 +178,9 @@ class ApiContext implements Context
     private function replaceStoredValues(string $text): string
     {
         foreach ($this->storedValues as $key => $value) {
-            $text = str_replace('{' . $key . '}', (string) $value, $text);
+            $text = str_replace('{'.$key.'}', (string) $value, $text);
         }
-        
+
         return $text;
     }
 }
