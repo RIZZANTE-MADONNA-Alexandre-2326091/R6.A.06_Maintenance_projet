@@ -25,9 +25,8 @@ pipeline {
                         }
 
                         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                            sh 'docker compose -f docker-compose.e2e.yml run --rm --entrypoint "" cypress sh -c "npm install && cypress run"'
-                        }
-                        
+                            sh "docker compose -f docker-compose.e2e.yml run --rm --entrypoint '' cypress sh -c 'npm install && cypress run'"
+                        }                        
                     } finally {
                         sh 'docker compose -f docker-compose.e2e.yml down -v'
                     }
