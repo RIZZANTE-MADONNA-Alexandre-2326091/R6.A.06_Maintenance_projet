@@ -10,7 +10,6 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Repository\EpreuveRepository;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -50,12 +49,13 @@ class Epreuve
     #[Groups(['epreuve:read', 'epreuve:write'])]
     private ?string $name = null;
 
-    #[ORM\ManyToOne(targetEntity: Competition::class, inversedBy: 'competitions')]
+    #[ORM\ManyToOne(targetEntity: Competition::class, inversedBy: 'epreuves')]
     private ?Competition $competition = null;
 
-    #[ORM\ManyToOne(targetEntity: Competition::class, cascade: ['persist', 'remove'], inversedBy: 'championnat')]
-    #[Groups(['epreuve:read'])]
-    private ?Collection $sport_id = null;
+    #[ORM\ManyToOne(targetEntity: Sport::class, inversedBy: 'epreuves')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['qcm:read', 'qcm:write'])]
+    private ?Sport $sport = null;
 
     /**
      * Renvoie l'identifiant de l'épreuve.
@@ -86,7 +86,7 @@ class Epreuve
     /**
      * Renvoie les identifiants des sports de l'épreuve.
      */
-    public function getSportId(): ?Collection
+    public function getSportId(): ?Sport
     {
         return $this->sport_id;
     }
@@ -94,7 +94,7 @@ class Epreuve
     /**
      * Modifie les identifiants des sports de l'épreuve.
      */
-    public function setSportId(?Collection $sport_id): static
+    public function setSportId(?Sport $sport_id): static
     {
         $this->sport_id = $sport_id;
 
