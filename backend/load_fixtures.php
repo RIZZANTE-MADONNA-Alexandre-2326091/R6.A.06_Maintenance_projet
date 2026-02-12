@@ -1,11 +1,11 @@
 <?php
 
-use App\Kernel;
-use App\Entity\Sport;
 use App\Entity\Championnat;
 use App\Entity\Competition;
 use App\Entity\Epreuve;
+use App\Entity\Sport;
 use App\Enum\SportTypeEnum;
+use App\Kernel;
 use Symfony\Component\Dotenv\Dotenv;
 
 require dirname(__DIR__).'/backend/vendor/autoload.php';
@@ -18,7 +18,8 @@ $container = $kernel->getContainer();
 $entityManager = $container->get('doctrine')->getManager();
 
 // Helper to truncate tables
-function truncateTable($em, $class) {
+function truncateTable($em, $class)
+{
     $cmd = $em->getClassMetadata($class);
     $connection = $em->getConnection();
     $dbPlatform = $connection->getDatabasePlatform();
@@ -97,7 +98,6 @@ $epreuve2->setCompetition($compFoot);
 $epreuve2->setSport($sports['Football']);
 $entityManager->persist($epreuve2);
 
-
 $compBad = new Competition();
 $compBad->setName('Open Badminton Benjamins/Minimes');
 $compBad->setChampionnat($dep35);
@@ -114,7 +114,6 @@ $epreuve4->setName('Doubles Mixtes');
 $epreuve4->setCompetition($compBad);
 $epreuve4->setSport($sports['Badminton']);
 $entityManager->persist($epreuve4);
-
 
 // --- Competitions for Regional ---
 $compCross = new Competition();
@@ -134,7 +133,6 @@ $epreuveCross2->setCompetition($compCross);
 $epreuveCross2->setSport($sports['Cross-Country']);
 $entityManager->persist($epreuveCross2);
 
-
 $compNat = new Competition();
 $compNat->setName('Meeting Natation Élite');
 $compNat->setChampionnat($regBzh);
@@ -145,7 +143,6 @@ $epreuveNat1->setName('50m Nage Libre');
 $epreuveNat1->setCompetition($compNat);
 $epreuveNat1->setSport($sports['Natation']);
 $entityManager->persist($epreuveNat1);
-
 
 // --- Competitions for National ---
 $compAthle = new Competition();

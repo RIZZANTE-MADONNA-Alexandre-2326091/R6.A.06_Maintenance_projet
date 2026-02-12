@@ -29,7 +29,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Post(),
         new Put(),
         new Patch(),
-        new Delete()
+        new Delete(),
     ],
     normalizationContext: ['groups' => ['user:read']],
     denormalizationContext: ['groups' => ['user:write']]
@@ -37,7 +37,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
-     * @var int|null Identifiant de l'utilisateur.
+     * Renvoie l'identifiant de l'utilisateur.
+     *
+     * @return int|null
      */
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -46,7 +48,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     /**
-     * @var string|null Adresse email de l'utilisateur.
+     * Renvoie l'email de l'utilisateur.
+     *
+     * @return int|null
      */
     #[ORM\Column(length: 180)]
     #[Groups(['user:read', 'user:write'])]
@@ -68,8 +72,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Renvoie l'identifiant de l'utilisateur.
-     * 
-     * @return int|null
      */
     public function getId(): ?int
     {
@@ -78,8 +80,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Renvoie l'email de l'utilisateur.
-     * 
-     * @return string|null
      */
     public function getEmail(): ?string
     {
@@ -87,10 +87,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * Définit l'email de l'utilisateur.
-     * 
-     * @param string $email
-     * @return static
+     * Modifie l'email de l'utilisateur.
+     *
+     * @return string|null
      */
     public function setEmail(string $email): static
     {
@@ -142,20 +141,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * Renvoie le mot de passe haché.
      * 
      * @see PasswordAuthenticatedUserInterface
-     * @return string|null
      */
     public function getPassword(): ?string
     {
         return $this->password;
     }
 
-
     /**
      * Définit le mot de passe haché.
      * 
      * @see PasswordAuthenticatedUserInterface
-     * @param string $password
-     * @return static
      */
     public function setPassword(string $password): static
     {

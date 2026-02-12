@@ -10,7 +10,6 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Repository\EpreuveRepository;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -27,7 +26,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Post(),
         new Put(),
         new Patch(),
-        new Delete()
+        new Delete(),
     ],
     normalizationContext: ['groups' => ['epreuve:read']],
     denormalizationContext: ['groups' => ['epreuve:write']]
@@ -35,19 +34,19 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Epreuve
 {
     /**
-     * @var int|null Identifiant de l'épreuve.
+     * @var int|null identifiant de l'épreuve
      */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['epreuve:read', 'competition:read', 'championnat:read'])]
+    #[Groups(['epreuve:read'])]
     private ?int $id = null;
 
     /**
-     * @var string|null Nom de l'épreuve.
+     * @var string|null nom de l'épreuve
      */
     #[ORM\Column(length: 255)]
-    #[Groups(['epreuve:read', 'epreuve:write', 'competition:read', 'championnat:read'])]
+    #[Groups(['epreuve:read', 'epreuve:write'])]
     private ?string $name = null;
 
     /**
@@ -57,18 +56,13 @@ class Epreuve
     #[Groups(['epreuve:read', 'epreuve:write', 'competition:read', 'championnat:read'])]
     private ?Competition $competition = null;
 
-    /**
-     * @var Sport|null Sport associé à l'épreuve.
-     */
-    #[ORM\ManyToOne(targetEntity: Sport::class)]
+    #[ORM\ManyToOne(targetEntity: Sport::class, inversedBy: 'epreuves')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['epreuve:read', 'epreuve:write', 'competition:read', 'championnat:read'])]
+    #[Groups(['qcm:read', 'qcm:write'])]
     private ?Sport $sport = null;
 
     /**
      * Renvoie l'identifiant de l'épreuve.
-     * 
-     * @return int|null
      */
     public function getId(): ?int
     {
@@ -77,8 +71,6 @@ class Epreuve
 
     /**
      * Renvoie le nom de l'épreuve.
-     * 
-     * @return string|null
      */
     public function getName(): ?string
     {
@@ -86,10 +78,7 @@ class Epreuve
     }
 
     /**
-     * Définit le nom de l'épreuve.
-     * 
-     * @param string $name
-     * @return static
+     * Modifie le nom de l'épreuve.
      */
     public function setName(string $name): static
     {
@@ -99,47 +88,32 @@ class Epreuve
     }
 
     /**
-     * Renvoie le sport de l'épreuve.
-     * 
-     * @return Sport|null
+     * Renvoie les identifiants des sports de l'épreuve.
      */
-    public function getSport(): ?Sport
+    public function getSportId(): ?Sport
     {
-        return $this->sport;
+        return $this->sport_id;
     }
 
     /**
-     * Définit le sport de l'épreuve.
-     * 
-     * @param Sport|null $sport
-     * @return static
+     * Modifie les identifiants des sports de l'épreuve.
      */
-    public function setSport(?Sport $sport): static
+    public function setSportId(?Sport $sport_id): static
     {
-        $this->sport = $sport;
+        $this->sport_id = $sport_id;
 
         return $this;
     }
 
-    /**
-     * Renvoie la compétition à laquelle l'épreuve appartient.
-     * 
-     * @return Competition|null
-     */
     public function getCompetition(): ?Competition
     {
         return $this->competition;
     }
 
-    /**
-     * Définit la compétition à laquelle l'épreuve appartient.
-     * 
-     * @param Competition|null $competition
-     * @return static
-     */
     public function setCompetition(?Competition $competition): static
     {
         $this->competition = $competition;
+
         return $this;
     }
 }

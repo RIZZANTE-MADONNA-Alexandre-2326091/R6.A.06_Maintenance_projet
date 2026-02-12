@@ -8,12 +8,14 @@ use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Gère les pages et actions relatives à l'entité Championnat.
+ *
  * @extends AbstractController
  */
 final class ChampionnatController extends AbstractController
 {
     /**
      * Affiche la page Twig des championnats.
+     *
      * @return Response Réponse de la création de la page
      */
     #[Route('/championnat', name: 'app_championnat')]

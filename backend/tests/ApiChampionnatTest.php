@@ -28,14 +28,14 @@ class ApiChampionnatTest extends ApiTestCase
     {
         $response = static::createClient()->request('POST', '/api/championnats', [
             'json' => [
-                'name' => 'Championnat de France'
-            ]
+                'name' => 'Championnat de France',
+            ],
         ]);
 
         $this->assertResponseStatusCodeSame(201);
         $this->assertResponseIsSuccessful();
         $this->assertJsonContains([
-            'name' => 'Championnat de France'
+            'name' => 'Championnat de France',
         ]);
         $this->assertMatchesRegularExpression('~^/api/championnats/\d+$~', $response->toArray()['@id']);
     }
@@ -46,12 +46,12 @@ class ApiChampionnatTest extends ApiTestCase
     public function testCreateChampionnatWithCompetition(): void
     {
         $client = static::createClient();
-        
+
         // Créer d'abord une compétition
         $competitionResponse = $client->request('POST', '/api/competitions', [
             'json' => [
-                'name' => 'Compétition Test'
-            ]
+                'name' => 'Compétition Test',
+            ],
         ]);
         $competitionIri = $competitionResponse->toArray()['@id'];
 
@@ -59,13 +59,13 @@ class ApiChampionnatTest extends ApiTestCase
         $response = $client->request('POST', '/api/championnats', [
             'json' => [
                 'name' => 'Championnat Régional',
-                'competition_id' => $competitionIri
-            ]
+                'competition_id' => $competitionIri,
+            ],
         ]);
 
         $this->assertResponseStatusCodeSame(201);
         $this->assertJsonContains([
-            'name' => 'Championnat Régional'
+            'name' => 'Championnat Régional',
         ]);
     }
 
@@ -78,8 +78,8 @@ class ApiChampionnatTest extends ApiTestCase
         $client = static::createClient();
         $response = $client->request('POST', '/api/championnats', [
             'json' => [
-                'name' => 'Championnat National'
-            ]
+                'name' => 'Championnat National',
+            ],
         ]);
         $id = $response->toArray()['id'];
 
@@ -90,7 +90,7 @@ class ApiChampionnatTest extends ApiTestCase
         $this->assertResponseIsSuccessful();
         $this->assertJsonContains([
             'id' => $id,
-            'name' => 'Championnat National'
+            'name' => 'Championnat National',
         ]);
     }
 
@@ -103,21 +103,21 @@ class ApiChampionnatTest extends ApiTestCase
         $client = static::createClient();
         $response = $client->request('POST', '/api/championnats', [
             'json' => [
-                'name' => 'Championnat Junior'
-            ]
+                'name' => 'Championnat Junior',
+            ],
         ]);
         $iri = $response->toArray()['@id'];
 
         // Mettre à jour le championnat
         $client->request('PUT', $iri, [
             'json' => [
-                'name' => 'Championnat Senior'
-            ]
+                'name' => 'Championnat Senior',
+            ],
         ]);
 
         $this->assertResponseStatusCodeSame(200);
         $this->assertJsonContains([
-            'name' => 'Championnat Senior'
+            'name' => 'Championnat Senior',
         ]);
     }
 
@@ -130,8 +130,8 @@ class ApiChampionnatTest extends ApiTestCase
         $client = static::createClient();
         $response = $client->request('POST', '/api/championnats', [
             'json' => [
-                'name' => 'Championnat Vétéran'
-            ]
+                'name' => 'Championnat Vétéran',
+            ],
         ]);
         $iri = $response->toArray()['@id'];
 
@@ -139,13 +139,13 @@ class ApiChampionnatTest extends ApiTestCase
         $client->request('PATCH', $iri, [
             'headers' => ['Content-Type' => 'application/merge-patch+json'],
             'json' => [
-                'name' => 'Championnat Vétérans'
-            ]
+                'name' => 'Championnat Vétérans',
+            ],
         ]);
 
         $this->assertResponseStatusCodeSame(200);
         $this->assertJsonContains([
-            'name' => 'Championnat Vétérans'
+            'name' => 'Championnat Vétérans',
         ]);
     }
 
@@ -158,8 +158,8 @@ class ApiChampionnatTest extends ApiTestCase
         $client = static::createClient();
         $response = $client->request('POST', '/api/championnats', [
             'json' => [
-                'name' => 'Championnat à supprimer'
-            ]
+                'name' => 'Championnat à supprimer',
+            ],
         ]);
         $iri = $response->toArray()['@id'];
 
@@ -179,8 +179,8 @@ class ApiChampionnatTest extends ApiTestCase
     {
         static::createClient()->request('POST', '/api/championnats', [
             'json' => [
-                'name' => ''
-            ]
+                'name' => '',
+            ],
         ]);
 
         $this->assertResponseStatusCodeSame(422);
@@ -202,8 +202,8 @@ class ApiChampionnatTest extends ApiTestCase
     {
         static::createClient()->request('PUT', '/api/championnats/99999', [
             'json' => [
-                'name' => 'Championnat inexistant'
-            ]
+                'name' => 'Championnat inexistant',
+            ],
         ]);
         $this->assertResponseStatusCodeSame(404);
     }
@@ -223,13 +223,13 @@ class ApiChampionnatTest extends ApiTestCase
     public function testFixturesChampionnatsArePresent(): void
     {
         $response = static::createClient()->request('GET', '/api/championnats');
-        
+
         $this->assertResponseStatusCodeSame(200);
         $data = $response->toArray();
-        
+
         // Vérifier qu'il y a au moins 3 championnats (nos fixtures)
         $this->assertGreaterThanOrEqual(3, $data['hydra:totalItems']);
-        
+
         // Vérifier que certains championnats spécifiques existent
         $championnatNames = array_column($data['hydra:member'], 'name');
         $this->assertContains('UGSEL Bretagne 2025-2026', $championnatNames);
@@ -245,20 +245,20 @@ class ApiChampionnatTest extends ApiTestCase
         $client = static::createClient();
         $response = $client->request('GET', '/api/championnats');
         $data = $response->toArray();
-        
+
         // Trouver le championnat UGSEL Bretagne
-        $ugselBretagne = array_filter($data['hydra:member'], 
-            fn($c) => $c['name'] === 'UGSEL Bretagne 2025-2026'
+        $ugselBretagne = array_filter($data['hydra:member'],
+            fn ($c) => 'UGSEL Bretagne 2025-2026' === $c['name']
         );
-        
+
         if (count($ugselBretagne) > 0) {
             $championnat = array_values($ugselBretagne)[0];
             $championnatId = $championnat['id'];
-            
+
             // Récupérer le championnat complet avec ses compétitions
-            $response = $client->request('GET', '/api/championnats/' . $championnatId);
+            $response = $client->request('GET', '/api/championnats/'.$championnatId);
             $champData = $response->toArray();
-            
+
             $this->assertResponseStatusCodeSame(200);
             $this->assertArrayHasKey('competitions', $champData);
             // Vérifier qu'il y a des compétitions associées
@@ -274,25 +274,24 @@ class ApiChampionnatTest extends ApiTestCase
         $client = static::createClient();
         $response = $client->request('GET', '/api/championnats');
         $data = $response->toArray();
-        
+
         // Trouver le championnat National
-        $nationals = array_filter($data['hydra:member'], 
-            fn($c) => $c['name'] === 'UGSEL National 2025-2026'
+        $nationals = array_filter($data['hydra:member'],
+            fn ($c) => 'UGSEL National 2025-2026' === $c['name']
         );
-        
+
         if (count($nationals) > 0) {
             $national = array_values($nationals)[0];
             $nationalId = $national['id'];
-            
+
             // Récupérer le championnat spécifique
-            $response = $client->request('GET', '/api/championnats/' . $nationalId);
-            
+            $response = $client->request('GET', '/api/championnats/'.$nationalId);
+
             $this->assertResponseStatusCodeSame(200);
             $this->assertJsonContains([
                 'id' => $nationalId,
-                'name' => 'UGSEL National 2025-2026'
+                'name' => 'UGSEL National 2025-2026',
             ]);
         }
     }
 }
-

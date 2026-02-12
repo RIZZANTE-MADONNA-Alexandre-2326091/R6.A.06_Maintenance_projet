@@ -1,8 +1,6 @@
 <?php
 
 use Behat\Behat\Context\Context;
-use Behat\Gherkin\Node\PyStringNode;
-use Behat\Gherkin\Node\TableNode;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -55,10 +53,8 @@ class FeatureContext implements Context
      */
     public function theCommandShouldSucceed(): void
     {
-        if ($this->exitCode !== 0) {
-            throw new \RuntimeException(
-                sprintf('Command failed with exit code %d. Output: %s', $this->exitCode, $this->commandTester->getDisplay())
-            );
+        if (0 !== $this->exitCode) {
+            throw new RuntimeException(sprintf('Command failed with exit code %d. Output: %s', $this->exitCode, $this->commandTester->getDisplay()));
         }
     }
 
@@ -69,9 +65,7 @@ class FeatureContext implements Context
     {
         $output = $this->commandTester->getDisplay();
         if (!str_contains($output, $text)) {
-            throw new \RuntimeException(
-                sprintf('Output does not contain "%s". Actual output: %s', $text, $output)
-            );
+            throw new RuntimeException(sprintf('Output does not contain "%s". Actual output: %s', $text, $output));
         }
     }
 }
