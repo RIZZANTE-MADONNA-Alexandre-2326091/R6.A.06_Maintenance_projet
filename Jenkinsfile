@@ -2,19 +2,24 @@ pipeline {
     agent any
 
     stages {
-        stage('Build et test backend + frontend') {
+        stage('Build et Test front + back') {
             steps {
                 script {
                     try {
-                        sh 'docker compose -f docker-compose.e2e.yml up -d --build --wait'
+                        sh 'docker compose -f docker-compose.e2e.yml up -d --build'
 
+                        sh 'docker compose -f docker-compose.e2e.yml exec -T backend_e2e composer install --no-interaction --prefer-dist'
+
+                        // PHPUnit
                         dir('backend') {
                              sh 'docker compose -f ../docker-compose.e2e.yml exec -T backend_e2e vendor/bin/phpunit tests --log-junit test-report.xml --coverage-clover coverage-report.xml'
                         }
 
+                        // Cypress 
                         sh 'docker compose -f docker-compose.e2e.yml up cypress --exit-code-from cypress'
 
                     } finally {
+                        // Nettoyage 
                         sh 'docker compose -f docker-compose.e2e.yml down -v'
                     }
                 }
@@ -25,7 +30,7 @@ pipeline {
             steps {
                 dir('backend') {
                     withSonarQubeEnv('SonarQube') {
-                        sh "/var/jenkins_home/tools/hudson.plugins.sonar.SonarRunnerInstallation/SonarScanner/bin/sonar-scanner"
+                        sh "${tool 'SonarScanner'}/bin/sonar-scanner"
                     }
                 }
             }

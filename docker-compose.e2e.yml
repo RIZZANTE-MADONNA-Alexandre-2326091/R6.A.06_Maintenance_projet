@@ -1,6 +1,5 @@
-version: '3.8'
-
 services:
+  # BACKEND
   backend_e2e:
     build:
       context: ./backend
@@ -8,11 +7,12 @@ services:
     volumes:
       - ./backend:/app
     environment:
-      - DATABASE_URL=pgsql://postgresql-chtiouimaxxing.alwaysdata.net:5432/chtiouimaxxing_pg?serverVersion=16&charset=utf8&user=chtiouimaxxing_balk_ans&password=fF6bdTQfwR
+      - DATABASE_URL=postgresql://chtiouimaxxing_balk_ans:fF6bdTQfwR@postgresql-chtiouimaxxing.alwaysdata.net:5432/chtiouimaxxing_pg?serverVersion=16&charset=utf8
     command: sh -c "composer install -q && php -S 0.0.0.0:8000 -t public"
     ports:
       - "8000:8000"
 
+  # FRONTEND
   frontend_e2e:
     build:
       context: ./frontend
@@ -24,8 +24,9 @@ services:
     ports:
       - "3000:3000"
 
+  # CYPRESS (Testeur)
   cypress:
-    image: wabilin/cypress-included:13.6.3-arm64
+    image: cypress/included:13.6.6
     depends_on:
       - frontend_e2e
     environment:
